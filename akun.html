@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akun Saya — Fhoenix12 Aquarius</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.profile-hero {
+  background: linear-gradient(135deg, rgba(30,22,53,0.9), rgba(40,28,70,0.9));
+  border: 1.5px solid rgba(159,122,234,0.2); border-radius: var(--radius);
+  padding: 1.75rem; margin-bottom: 2rem;
+  display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;
+}
+.profile-avatar {
+  width: 62px; height: 62px; border-radius: 50%;
+  background: linear-gradient(135deg, #6d28d9, #f6a623);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; flex-shrink: 0;
+  box-shadow: 0 4px 20px rgba(109,40,217,0.4);
+}
+.profile-name { font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 600; color: var(--ink); }
+.profile-email { font-size: 0.8rem; color: var(--ink2); margin-top: 0.15rem; }
+.profile-tag {
+  display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.4rem;
+  background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.2);
+  color: var(--success); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em;
+  padding: 0.15rem 0.6rem; border-radius: 100px;
+}
+.profile-btns { margin-left: auto; display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+
+.sec-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;
+}
+.sec-title {
+  font-family: 'Cinzel', serif; font-size: 0.88rem; font-weight: 600;
+  color: var(--ink); letter-spacing: 0.04em;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+
+.order-list { display: flex; flex-direction: column; gap: 0.75rem; }
+.order-card {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: 12px; padding: 1rem 1.15rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+  transition: border-color 0.2s;
+}
+.order-card:hover { border-color: rgba(159,122,234,0.25); }
+.order-left { display: flex; gap: 0.8rem; align-items: center; }
+.order-emoji { font-size: 1.6rem; }
+.order-name { font-weight: 600; font-size: 0.88rem; color: var(--ink); margin-bottom: 0.1rem; }
+.order-date { font-size: 0.74rem; color: var(--ink2); }
+.order-code { font-size: 0.72rem; color: var(--accent); font-weight: 600; }
+.order-right { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.order-price { font-weight: 700; font-size: 0.88rem; color: var(--ink); }
+.order-status { font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.65rem; border-radius: 100px; }
+.status-menunggu  { background: rgba(246,166,35,0.12);  color: #f6a623;       border: 1px solid rgba(246,166,35,0.25); }
+.status-selesai   { background: rgba(52,211,153,0.12);  color: var(--success); border: 1px solid rgba(52,211,153,0.25); }
+.status-dibatalkan{ background: rgba(248,113,113,0.12); color: var(--danger);  border: 1px solid rgba(248,113,113,0.25); }
+
+.empty-state { text-align: center; padding: 2.5rem 1rem; }
+.empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; opacity: 0.5; }
+.empty-text { color: var(--ink2); font-size: 0.88rem; margin-bottom: 1rem; }
+
+.confirm-overlay {
+  display: none; position: fixed; inset: 0; z-index: 300;
+  background: rgba(4,4,12,0.75); backdrop-filter: blur(8px);
+  align-items: center; justify-content: center; padding: 1rem;
+}
+.confirm-overlay.open { display: flex; animation: fadeIn 0.18s; }
+.confirm-box {
+  background: var(--surface); border: 1.5px solid rgba(248,113,113,0.3);
+  border-radius: 18px; padding: 2rem 1.75rem; max-width: 340px; width: 100%;
+  text-align: center; animation: slideUp 0.22s ease;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+.confirm-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+.confirm-title { font-family: 'Cinzel', serif; font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--ink); }
+.confirm-sub { font-size: 0.82rem; color: var(--ink2); line-height: 1.6; margin-bottom: 1.5rem; }
+.confirm-btns { display: flex; gap: 0.75rem; justify-content: center; }
+.btn-hapus { background: rgba(248,113,113,0.15); color: var(--danger); border: 1.5px solid rgba(248,113,113,0.3); }
+.btn-hapus:hover { background: rgba(248,113,113,0.28); }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">Fhoenix<span>12</span> Aquarius</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Beranda</a></li>
+    <li><a href="produk.html">Produk</a></li>
+    <li><a href="cara-pesan.html">Cara Pesan</a></li>
+    <li><a href="akun.html" class="active">Akun Saya</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="store-pill" id="store-pill"><div class="dot"></div> Buka</div>
+    <a href="https://wa.me/6287872334563" class="btn-wa" target="_blank">💬 WA</a>
+  </div>
+</nav>
+<div id="closed-banner">🔒 Toko tutup sementara — Hubungi WhatsApp untuk pesanan</div>
+
+<div class="page-wrap">
+  <div class="profile-hero fade-up">
+    <div class="profile-avatar" id="profile-avatar">👤</div>
+    <div class="profile-info">
+      <div class="profile-name" id="profile-name">Loading...</div>
+      <div class="profile-email" id="profile-email">—</div>
+      <div class="profile-tag">✦ Pelanggan Aktif</div>
+    </div>
+    <div class="profile-btns">
+      <a href="produk.html" class="btn btn-accent btn-sm">🛒 Belanja</a>
+      <button class="btn btn-ghost btn-sm" onclick="doLogout()" style="color:var(--danger);border-color:rgba(248,113,113,0.3)">🚪 Logout</button>
+    </div>
+  </div>
+
+  <div class="sec-header">
+    <div class="sec-title">📦 Riwayat Pesanan</div>
+    <button class="btn btn-ghost btn-sm" id="btn-hapus-semua" onclick="tanyaHapus()" style="color:var(--danger);border-color:rgba(248,113,113,0.3);display:none">
+      🗑️ Hapus Riwayat
+    </button>
+  </div>
+  <div class="order-list" id="order-list">
+    <div class="empty-state">
+      <div class="empty-icon">📭</div>
+      <div class="empty-text">Belum ada pesanan</div>
+      <a href="produk.html" class="btn btn-accent btn-sm">🛒 Mulai Belanja</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <strong>Fhoenix12 Aquarius</strong> · Portal Pelanggan<br>
+  <span style="font-size:0.72rem;margin-top:0.35rem;display:block;opacity:0.6">© 2025 Fhoenix12 Aquarius</span>
+</footer>
+
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <div class="confirm-icon">🗑️</div>
+    <div class="confirm-title">Hapus Riwayat Pesanan?</div>
+    <div class="confirm-sub">Semua riwayat pesananmu akan dihapus dari halaman ini. Tindakan ini tidak bisa dibatalkan.</div>
+    <div class="confirm-btns">
+      <button class="btn btn-ghost btn-sm" onclick="tutupConfirm()">Batal</button>
+      <button class="btn btn-hapus btn-sm" onclick="hapusRiwayat()">Ya, Hapus</button>
+    </div>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script src="shared.js"></script>
+<script>
+requireLogin();
+
+function doLogout() { if (confirm('Yakin mau logout?')) logoutUser(); }
+function rp(n) { return n === 0 ? 'Hubungi WA' : 'Rp' + n.toLocaleString('id-ID'); }
+
+function statusClass(s) {
+  if (s === 'Selesai')    return 'status-selesai';
+  if (s === 'Dibatalkan') return 'status-dibatalkan';
+  return 'status-menunggu';
+}
+
+function tanyaHapus() { document.getElementById('confirm-overlay').classList.add('open'); }
+function tutupConfirm() { document.getElementById('confirm-overlay').classList.remove('open'); }
+
+function hapusRiwayat() {
+  const user = getCurrentUser();
+  if (!user) return;
+  const users = getUsers();
+  if (users[user.email]) {
+    users[user.email].orders = [];
+    saveUsers(users);
+  }
+  tutupConfirm();
+  renderOrders();
+}
+
+document.getElementById('confirm-overlay').addEventListener('click', function(e) {
+  if (e.target === this) tutupConfirm();
+});
+
+function getOrdersForUser(email) {
+  const users = getUsers();
+  const globalOrders = JSON.parse(localStorage.getItem('fx_orders') || '[]');
+
+  if (!users[email] || !users[email].orders) return [];
+
+  const userOrders = users[email].orders;
+
+  // Buat map dari fx_orders berdasarkan id (exact)
+  const globalById = {};
+  globalOrders.forEach(o => { globalById[String(o.id)] = o; });
+
+  return userOrders.map(o => {
+    const uid = String(o.id || '');
+
+    // Coba match exact dengan id di global
+    let globalOrder = globalById[uid];
+
+    // Jika tidak ketemu, coba strip/tambah prefix "FX-"
+    if (!globalOrder) {
+      const withoutPrefix = uid.replace(/^FX-/i, '');
+      const withPrefix    = 'FX-' + withoutPrefix;
+      globalOrder = globalById[withPrefix] || globalById[withoutPrefix];
+    }
+
+    // Jika masih tidak ketemu, coba cocokkan berdasarkan nama produk + nomor WA + harga
+    // (fallback untuk order lama yang id-nya beda)
+    if (!globalOrder) {
+      globalOrder = globalOrders.find(g =>
+        g.produk === (o.produk || o.name) &&
+        g.wa     === o.wa &&
+        g.price  === o.price
+      );
+    }
+
+    return {
+      ...o,
+      // Gunakan status dari global jika ketemu, supaya reflect update admin
+      status: globalOrder ? globalOrder.status : o.status
+    };
+  });
+}
+
+function renderOrders() {
+  const user = getCurrentUser();
+  if (!user) return;
+
+  const orders = getOrdersForUser(user.email);
+  const list = document.getElementById('order-list');
+  const btnHapus = document.getElementById('btn-hapus-semua');
+
+  if (orders.length === 0) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📭</div>
+        <div class="empty-text">Belum ada pesanan</div>
+        <a href="produk.html" class="btn btn-accent btn-sm">🛒 Mulai Belanja</a>
+      </div>`;
+    btnHapus.style.display = 'none';
+    return;
+  }
+
+  btnHapus.style.display = 'inline-flex';
+
+  list.innerHTML = orders.map(o => `
+    <div class="order-card">
+      <div class="order-left">
+        <div class="order-emoji">${o.emoji || '📦'}</div>
+        <div>
+          <div class="order-name">${o.produk || o.name || '—'}</div>
+          <div class="order-date">${new Date(o.date).toLocaleDateString('id-ID', {day:'numeric',month:'short',year:'numeric'})}</div>
+          <div class="order-code">#${o.id}</div>
+        </div>
+      </div>
+      <div class="order-right">
+        <div class="order-price">${rp(o.price || 0)}</div>
+        <span class="order-status ${statusClass(o.status)}">${o.status}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const user = getCurrentUser();
+  if (!user) return;
+  document.getElementById('profile-name').textContent = user.name;
+  document.getElementById('profile-email').textContent = user.email + ' · ' + (user.phone || '');
+  document.getElementById('profile-avatar').textContent = user.name.charAt(0).toUpperCase();
+  renderOrders();
+});
+</script>
+</body>
+</html>

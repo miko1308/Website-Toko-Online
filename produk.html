@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Produk — Fhoenix12 Aquarius</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.filter-row { display:flex; gap:0.4rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+.ftab {
+  padding:0.38rem 1rem; border-radius:8px; font-size:0.8rem; font-weight:600;
+  cursor:pointer; border:1.5px solid var(--border2); background:var(--surface2);
+  color:var(--ink2); transition:all 0.15s; font-family:'DM Sans',sans-serif;
+}
+.ftab:hover { border-color:var(--accent); color:var(--accent); }
+.ftab.active {
+  background:linear-gradient(135deg,#6d28d9,#9f7aea); color:#fff;
+  border-color:transparent; box-shadow:0 4px 18px rgba(109,40,217,0.4);
+}
+
+.prod-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:1rem; }
+.prod-card {
+  background:rgba(16,16,30,0.85); border:1.5px solid var(--border);
+  border-radius:var(--radius); overflow:hidden; transition:all 0.2s;
+  cursor:pointer; display:flex; flex-direction:column; backdrop-filter:blur(8px);
+}
+.prod-card:hover { border-color:rgba(159,122,234,0.4); box-shadow:0 8px 32px rgba(0,0,0,0.4); transform:translateY(-3px); }
+.prod-top { background:var(--surface2); padding:1.4rem; display:flex; align-items:center; justify-content:space-between; }
+.prod-emoji { font-size:2.2rem; }
+.prod-badge {
+  font-size:0.68rem; font-weight:700; padding:0.18rem 0.55rem; border-radius:6px;
+  background:rgba(159,122,234,0.12); color:var(--accent); border:1px solid rgba(159,122,234,0.22);
+}
+.prod-badge.fisik  { background:rgba(246,166,35,0.1);  color:var(--accent2);  border-color:rgba(246,166,35,0.22); }
+.prod-badge.best   { background:rgba(232,93,154,0.1);  color:var(--accent3);  border-color:rgba(232,93,154,0.22); }
+.prod-badge.custom { background:rgba(52,211,153,0.1);  color:var(--success); border-color:rgba(52,211,153,0.22); }
+.prod-body { padding:1rem; flex:1; display:flex; flex-direction:column; }
+.prod-name { font-weight:700; font-size:0.9rem; margin-bottom:0.3rem; color:var(--ink); }
+.prod-desc { font-size:0.78rem; color:var(--ink2); line-height:1.55; flex:1; margin-bottom:0.9rem; }
+.prod-foot { display:flex; align-items:center; justify-content:space-between; }
+.prod-price { font-family:'Cinzel',serif; font-size:1.1rem; background:linear-gradient(135deg,#c4b5fd,#f6a623); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.prod-price small { font-family:'DM Sans',sans-serif; font-size:0.68rem; color:var(--ink2); display:block; -webkit-text-fill-color:var(--ink2); }
+.stock-row { display:flex; justify-content:space-between; align-items:center; margin-top:0.65rem; font-size:0.7rem; color:var(--ink2); }
+.stock-bar { height:3px; background:var(--border2); border-radius:2px; margin-top:0.3rem; overflow:hidden; }
+.stock-fill { height:100%; background:linear-gradient(90deg,#34d399,#6ee7b7); border-radius:2px; }
+
+.prod-info-row { display:flex; align-items:center; gap:0.9rem; background:var(--surface2); border-radius:10px; padding:0.9rem; margin-bottom:1.2rem; border:1px solid var(--border2); }
+.prod-info-emoji { font-size:2rem; }
+.prod-info-name { font-weight:700; font-size:0.88rem; color:var(--ink); }
+.prod-info-price { font-weight:700; font-family:'Cinzel',serif; font-size:1.05rem; background:linear-gradient(135deg,#c4b5fd,#f6a623); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+
+.pay-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.55rem; margin-bottom:1rem; }
+.pay-opt {
+  border:1.5px solid var(--border2); border-radius:10px; padding:0.65rem 0.75rem;
+  cursor:pointer; display:flex; align-items:center; gap:0.55rem;
+  font-size:0.81rem; font-weight:600; color:var(--ink2); transition:all 0.15s;
+  background:var(--surface); font-family:'DM Sans',sans-serif;
+}
+.pay-opt:hover { border-color:var(--accent); color:var(--ink); }
+.pay-opt.sel { border-color:var(--accent); background:rgba(159,122,234,0.1); color:var(--accent); }
+.pi { font-size:1.1rem; }
+.pay-info { display:none; background:rgba(159,122,234,0.06); border:1px solid rgba(159,122,234,0.18); border-radius:10px; padding:0.85rem 1rem; margin-bottom:1rem; font-size:0.82rem; }
+.pay-info.show { display:block; animation:fadeIn 0.15s; }
+.pay-info-row { display:flex; justify-content:space-between; align-items:center; padding:0.28rem 0; }
+.pay-info-row:not(:last-child) { border-bottom:1px solid rgba(159,122,234,0.1); }
+.pay-info-label { color:var(--ink2); }
+.pay-info-val { font-weight:700; display:flex; align-items:center; gap:0.4rem; color:var(--ink); }
+.copy-btn { background:linear-gradient(135deg,#6d28d9,#9f7aea); color:#fff; border:none; font-size:0.68rem; padding:0.14rem 0.5rem; border-radius:5px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+.copy-btn:hover { opacity:0.8; }
+.inst-box { display:none; background:rgba(246,166,35,0.07); border:1px solid rgba(246,166,35,0.22); border-radius:10px; padding:0.75rem 1rem; font-size:0.81rem; color:var(--accent2); margin-bottom:1rem; }
+.inst-box.show { display:block; }
+.total-box { background:var(--surface2); border-radius:10px; padding:0.9rem 1rem; margin-bottom:1.2rem; border:1px solid var(--border2); }
+.total-row { display:flex; justify-content:space-between; font-size:0.83rem; color:var(--ink2); padding:0.2rem 0; }
+.total-final { display:flex; justify-content:space-between; font-weight:700; font-size:0.93rem; color:var(--ink); border-top:1px solid var(--border2); margin-top:0.5rem; padding-top:0.6rem; }
+.total-final span:last-child { background:linear-gradient(135deg,#c4b5fd,#f6a623); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+
+.success-wrap { text-align:center; padding:2rem 1.5rem; }
+.success-emoji { font-size:3rem; margin-bottom:0.75rem; animation:pop 0.4s; }
+@keyframes pop { 0%{transform:scale(0.5)} 70%{transform:scale(1.15)} 100%{transform:scale(1)} }
+.success-title { font-family:'Cinzel',serif; font-size:1.5rem; margin-bottom:0.4rem; background:linear-gradient(135deg,#f0edff,#c4b5fd); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.success-sub { color:var(--ink2); font-size:0.86rem; line-height:1.65; margin-bottom:1.2rem; }
+.order-code { display:inline-block; background:var(--surface2); border:1.5px dashed var(--accent); border-radius:10px; padding:0.55rem 1.5rem; font-weight:700; font-size:1.05rem; color:var(--accent); letter-spacing:0.07em; margin-bottom:1.2rem; }
+.btn-wa-big { width:100%; background:linear-gradient(135deg,#15803d,#25D366); color:#fff; border:none; padding:0.82rem; border-radius:10px; font-size:0.92rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.5rem; transition:opacity 0.15s; font-family:'DM Sans',sans-serif; box-shadow:0 4px 18px rgba(37,211,102,0.3); }
+.btn-wa-big:hover { opacity:0.88; }
+.skip-link { display:block; margin-top:0.75rem; font-size:0.78rem; color:var(--ink2); cursor:pointer; background:none; border:none; font-family:'DM Sans',sans-serif; }
+.skip-link:hover { color:var(--accent); }
+
+.nav-user-btn { display:flex; align-items:center; gap:0.4rem; background:rgba(159,122,234,0.1); color:var(--accent); border:1px solid rgba(159,122,234,0.2); border-radius:8px; padding:0.35rem 0.85rem; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.15s; }
+.nav-user-btn:hover { background:rgba(159,122,234,0.2); }
+@media(max-width:500px) { .prod-grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">Fhoenix<span>12</span> Aquarius</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Beranda</a></li>
+    <li><a href="produk.html" class="active">Produk</a></li>
+    <li><a href="cara-pesan.html">Cara Pesan</a></li>
+    <li id="nav-akun-li" style="display:none"><a href="akun.html">👤 Akun</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="store-pill" id="store-pill"><div class="dot"></div> Buka</div>
+    <a href="https://wa.me/6287872334563" class="btn-wa" target="_blank">💬 WA</a>
+    <a href="login-pelanggan.html" class="nav-user-btn" id="nav-login-btn">🔑 Login</a>
+  </div>
+</nav>
+<div id="closed-banner">🔒 Toko tutup sementara — Hubungi WhatsApp untuk pesanan</div>
+
+<div class="page-wrap">
+  <div class="page-header fade-up">
+    <div class="page-tag">🛍️ Produk</div>
+    <h1>Semua Produk</h1>
+    <p>Produk digital dan fisik pilihan. Harga fix, tidak bisa ditawar.</p>
+  </div>
+  <div class="filter-row">
+    <button class="ftab active" onclick="filterProd('all',this)">Semua</button>
+    <button class="ftab" onclick="filterProd('digital',this)">Digital</button>
+    <button class="ftab" onclick="filterProd('fisik',this)">Fisik</button>
+  </div>
+  <div class="prod-grid" id="prod-grid"></div>
+</div>
+
+<footer>
+  <strong>Fhoenix12 Aquarius</strong> · Toko Digital & Fisik Terpercaya<br>
+  <span style="font-size:0.72rem;margin-top:0.35rem;display:block;opacity:0.6">© 2025 Fhoenix12 Aquarius</span>
+  <a href="login.html" style="font-size:0.68rem;color:var(--ink2);text-decoration:none;opacity:0.3;display:inline-block;margin-top:0.5rem;transition:opacity 0.2s" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='0.3'">⚙️ Admin</a>
+</footer>
+
+<!-- BUY MODAL -->
+<div class="overlay" id="buy-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Beli Produk</h3>
+      <button class="modal-close" onclick="closeOverlay('buy-overlay')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="prod-info-row">
+        <div class="prod-info-emoji" id="m-emoji">🎮</div>
+        <div><div class="prod-info-name" id="m-name">—</div><div class="prod-info-price" id="m-price">—</div></div>
+      </div>
+      <div class="inst-box" id="inst-box">💰 <strong>Bayar Bertahap:</strong> DP <span id="dp-val">—</span> sekarang, sisa <span id="sisa-val">—</span> setelah selesai.</div>
+      <div class="form-group"><label>Nama Lengkap *</label><input id="f-name" type="text" placeholder="Nama kamu..."></div>
+      <div class="form-group"><label>Nomor WhatsApp *</label><input id="f-wa" type="tel" placeholder="08xxxxxxxxxx"></div>
+      <div class="form-group"><label>Catatan (opsional)</label><textarea id="f-note" placeholder="Catatan tambahan..."></textarea></div>
+      <div class="form-group">
+        <label>Metode Pembayaran</label>
+        <div class="pay-grid">
+          <div class="pay-opt sel" onclick="selPay('brimo',this)"><span class="pi">🏦</span> BRImo</div>
+          <div class="pay-opt" onclick="selPay('transfer',this)"><span class="pi">💳</span> Transfer</div>
+          <div class="pay-opt" onclick="selPay('qris',this)"><span class="pi">📱</span> QRIS</div>
+          <div class="pay-opt" onclick="selPay('cod',this)"><span class="pi">💵</span> COD</div>
+        </div>
+      </div>
+      <div class="pay-info show" id="pi-brimo">
+        <div class="pay-info-row"><span class="pay-info-label">Bank</span><span class="pay-info-val">BRI</span></div>
+        <div class="pay-info-row"><span class="pay-info-label">Atas Nama</span><span class="pay-info-val">Ega Rahmad Akbar</span></div>
+        <div class="pay-info-row"><span class="pay-info-label">No. Rekening</span><span class="pay-info-val">008401082727535 <button class="copy-btn" onclick="copyText('008401082727535',this)">Salin</button></span></div>
+      </div>
+      <div class="pay-info" id="pi-transfer">
+        <div class="pay-info-row"><span class="pay-info-label">Bank</span><span class="pay-info-val">BRI</span></div>
+        <div class="pay-info-row"><span class="pay-info-label">No. Rekening</span><span class="pay-info-val">008401082727535 <button class="copy-btn" onclick="copyText('008401082727535',this)">Salin</button></span></div>
+      </div>
+      <div class="pay-info" id="pi-qris"><div style="text-align:center;padding:0.5rem 0;font-size:0.82rem;color:var(--ink2)">📲 Scan QRIS via aplikasi pembayaran.<br>Hubungi WA untuk mendapatkan kode QR.</div></div>
+      <div class="pay-info" id="pi-cod"><div style="font-size:0.82rem;color:var(--ink2)">COD hanya area tertentu. Konfirmasi lokasi via WhatsApp sebelum pesan.</div></div>
+      <div class="total-box">
+        <div class="total-row"><span>Subtotal</span><span id="t-sub">—</span></div>
+        <div class="total-row"><span>Biaya layanan</span><span>Gratis</span></div>
+        <div class="total-final"><span>Total Bayar</span><span id="t-final">—</span></div>
+      </div>
+      <button class="btn btn-accent btn-full" onclick="confirmOrder()">✅ Konfirmasi Pesanan</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="overlay" id="ok-overlay">
+  <div class="modal">
+    <div class="modal-body">
+      <div class="success-wrap">
+        <div class="success-emoji">🎉</div>
+        <div class="success-title">Pesanan Diterima!</div>
+        <div class="success-sub">Kode pesanan kamu:</div>
+        <div class="order-code" id="ok-code">FX-000000</div>
+        <div class="success-sub">Setelah transfer, kirim bukti + kode pesanan ke WhatsApp kami.</div>
+        <button class="btn-wa-big" onclick="goWA()">💬 Lanjut ke WhatsApp</button>
+        <button class="skip-link" onclick="closeOverlay('ok-overlay')">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN REQUIRED MODAL -->
+<div class="overlay" id="login-required-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>🔒 Login Diperlukan</h3>
+      <button class="modal-close" onclick="closeOverlay('login-required-overlay')">✕</button>
+    </div>
+    <div class="modal-body" style="text-align:center;padding:2rem 1.5rem">
+      <div style="font-size:2.8rem;margin-bottom:0.75rem">🦅</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.05rem;font-weight:600;margin-bottom:0.5rem;color:var(--ink)">Wajib Login Dulu</div>
+      <div style="font-size:0.83rem;color:var(--ink2);line-height:1.65;margin-bottom:1.5rem">
+        Untuk memesan produk, kamu perlu punya akun terlebih dahulu.<br>
+        Login atau daftar gratis sekarang!
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.65rem">
+        <a href="login-pelanggan.html" class="btn btn-accent btn-full" onclick="simpanTujuan()">🔑 Login</a>
+        <a href="login-pelanggan.html?tab=register" class="btn btn-ghost btn-full" onclick="simpanTujuan()">📝 Daftar Gratis</a>
+      </div>
+      <button class="skip-link" onclick="closeOverlay('login-required-overlay')">Batal</button>
+    </div>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script src="shared.js"></script>
+<script>
+const PRODUCTS = [
+  { id:1, name:'Google Play Card Rp 39.000', desc:'Langsung klaim di Google Play Store. Cocok untuk game, app, atau langganan musik.', price:39000, emoji:'🎮', type:'digital', badge:'Digital', stock:80 },
+  { id:2, name:'Google Play Card Rp 75.000', desc:'Nominal lebih besar, lebih hemat. Bisa langsung diklaim di akun Google kamu.', price:75000, emoji:'🎮', type:'digital', badge:'Digital', stock:65 },
+  { id:3, name:'Google Play Card Rp 116.000', desc:'Nilai tertinggi. Cocok untuk pembelian game premium atau subscription app.', price:116000, emoji:'🎮', type:'digital', badge:'Digital', stock:40 },
+  { id:4, name:'Visa Platform Pass', desc:'Akses ke berbagai platform internasional berbayar. Langsung bisa dipakai.', price:85000, emoji:'💳', type:'digital', badge:'Digital', stock:30 },
+  { id:5, name:'Voucher E-Commerce', desc:'Voucher belanja untuk berbagai platform e-commerce terpercaya di Indonesia.', price:50000, emoji:'🛒', type:'digital', badge:'Digital', stock:55 },
+  { id:6, name:'Produk Fisik Premium', desc:'Produk fisik pilihan dengan pengiriman cepat dan aman ke seluruh Indonesia.', price:120000, emoji:'📦', type:'fisik', badge:'Fisik', stock:20 },
+  { id:7, name:'Bundle Digital Pack', desc:'Paket hemat: Google Play Card + Voucher platform dalam satu bundel spesial.', price:180000, emoji:'🎁', type:'digital', badge:'Best Deal', stock:15 },
+  { id:8, name:'Top Up Custom', desc:'Nominal custom sesuai kebutuhan. Hubungi WA untuk diskusi harga terbaik.', price:0, emoji:'⚡', type:'digital', badge:'Custom', stock:99 },
+];
+let curProd=null, curPay='brimo', waMsg='', pendingProdId=null;
+
+function rp(n) { return n===0?'Hubungi WA':'Rp'+n.toLocaleString('id-ID'); }
+function badgeClass(b) { if(b==='Fisik')return'fisik'; if(b==='Best Deal')return'best'; if(b==='Custom')return'custom'; return''; }
+
+// Update nav based on login state
+window.addEventListener('DOMContentLoaded',()=>{
+  const user = getCurrentUser();
+  const loginBtn = document.getElementById('nav-login-btn');
+  const akunLi = document.getElementById('nav-akun-li');
+  if (user) {
+    loginBtn.textContent = '👤 ' + user.name.split(' ')[0];
+    loginBtn.href = 'akun.html';
+    if (akunLi) akunLi.style.display = 'block';
+  }
+});
+
+function renderProds(filter='all') {
+  const list = filter==='all' ? PRODUCTS : PRODUCTS.filter(p=>p.type===filter);
+  document.getElementById('prod-grid').innerHTML = list.map((p,i)=>`
+    <div class="prod-card fade-up" style="animation-delay:${i*0.04}s">
+      <div class="prod-top"><span class="prod-emoji">${p.emoji}</span><span class="prod-badge ${badgeClass(p.badge)}">${p.badge}</span></div>
+      <div class="prod-body">
+        <div class="prod-name">${p.name}</div>
+        <div class="prod-desc">${p.desc}</div>
+        <div class="prod-foot">
+          <div class="prod-price">${rp(p.price)}${p.price>0?'<small>harga fix</small>':'<small>diskusi via WA</small>'}</div>
+          <button class="btn btn-accent btn-sm" onclick="openBuy(${p.id})">${p.price===0?'💬 WA':'Beli'}</button>
+        </div>
+        ${p.price>0?`<div class="stock-row"><span>Stok</span><span>${p.stock}%</span></div><div class="stock-bar"><div class="stock-fill" style="width:${p.stock}%"></div></div>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function filterProd(type,el) {
+  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active'); renderProds(type);
+}
+
+function openBuy(id) {
+  const p = PRODUCTS.find(x=>x.id===id);
+  if (!p) return;
+  if (p.price===0) { window.open(`https://wa.me/6287872334563?text=${encodeURIComponent('Halo kak, saya mau tanya soal Top Up Custom 😊')}`,'_blank'); return; }
+  if (isStoreClosed) { window.open(`https://wa.me/6287872334563?text=${encodeURIComponent('Halo kak, saya mau pesan '+p.name)}`,'_blank'); return; }
+
+  // Wajib login sebelum bisa pesan
+  if (!isLoggedIn()) {
+    openOverlay('login-required-overlay');
+    pendingProdId = id;
+    return;
+  }
+
+  curProd = p;
+  // Pre-fill name & WA dari akun
+  const user = getCurrentUser();
+  if (user) {
+    document.getElementById('f-name').value = user.name;
+    document.getElementById('f-wa').value = user.phone || '';
+  }
+  document.getElementById('m-emoji').textContent = p.emoji;
+  document.getElementById('m-name').textContent = p.name;
+  document.getElementById('m-price').textContent = rp(p.price);
+  document.getElementById('t-sub').textContent = rp(p.price);
+  document.getElementById('t-final').textContent = rp(p.price);
+  const box = document.getElementById('inst-box');
+  if (isInstallment && p.price>0) {
+    const dp=Math.ceil(p.price/2);
+    document.getElementById('dp-val').textContent=rp(dp);
+    document.getElementById('sisa-val').textContent=rp(p.price-dp);
+    box.classList.add('show');
+  } else box.classList.remove('show');
+  openOverlay('buy-overlay');
+}
+
+function selPay(method,el) {
+  document.querySelectorAll('.pay-opt').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel'); curPay=method;
+  ['brimo','transfer','qris','cod'].forEach(m=>document.getElementById('pi-'+m).classList.remove('show'));
+  document.getElementById('pi-'+method).classList.add('show');
+}
+
+function confirmOrder() {
+  const name = document.getElementById('f-name').value.trim();
+  const wa   = document.getElementById('f-wa').value.trim();
+  const note = document.getElementById('f-note').value.trim();
+  if (!name) { alert('Nama tidak boleh kosong 😊'); return; }
+  if (!wa)   { alert('Nomor WhatsApp tidak boleh kosong 😊'); return; }
+  if (!curProd) return;
+  const code = 'FX-'+Date.now().toString().slice(-6);
+  document.getElementById('ok-code').textContent = code;
+  const orderData = {
+    id:code, produk:curProd.name, emoji:curProd.emoji, price:curProd.price,
+    nama:name, wa:wa, metode:curPay, catatan:note, status:'Menunggu'
+  };
+  // Save to admin orders
+  saveOrderGlobal(orderData);
+  // Save to user account if logged in
+  saveOrderToAccount(orderData);
+  const msg = [
+    'Halo kak Fhoenix12! \u{1F44B}',
+    '',
+    'Konfirmasi pesanan saya:',
+    '',
+    '\u{1F6D2} Produk  : ' + curProd.name,
+    '\u{1F4B0} Harga   : ' + rp(curProd.price),
+    '\u{1F4B3} Bayar   : ' + curPay.toUpperCase(),
+    '\u{1F464} Nama    : ' + name,
+    '\u{1F4F1} WA      : ' + wa,
+    note ? '\u{1F4DD} Catatan : ' + note : null,
+    '',
+    '\u{1F516} Kode Pesanan: ' + code,
+    '',
+    'Terima kasih kak! \u{1F64F}\u{2728}'
+  ].filter(l => l !== null).join('\n');
+  waMsg = `https://wa.me/6287872334563?text=${encodeURIComponent(msg)}`;
+  closeOverlay('buy-overlay');
+  openOverlay('ok-overlay');
+}
+
+function goWA() {
+  if (autoWA && waMsg) window.open(waMsg,'_blank');
+  closeOverlay('ok-overlay');
+}
+
+function simpanTujuan() {
+  // Simpan URL produk agar setelah login balik ke sini
+  sessionStorage.setItem('after_login', 'produk.html');
+}
+
+renderProds();
+</script>
+</body>
+</html>

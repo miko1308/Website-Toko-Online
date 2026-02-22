@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel — Fhoenix12 Aquarius</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.admin-badge-nav {
+  font-size:0.58rem; font-weight:800; background:linear-gradient(135deg,#6d28d9,#9f7aea);
+  color:#fff; padding:0.12rem 0.5rem; border-radius:100px; margin-left:0.4rem; vertical-align:middle;
+}
+.admin-hero {
+  background:linear-gradient(135deg,#12103a 0%,#1e1450 60%,#100d30 100%);
+  border:1.5px solid rgba(159,122,234,0.25); border-radius:var(--radius);
+  padding:1.75rem; margin-bottom:2rem;
+  display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;
+  position:relative; overflow:hidden;
+}
+.admin-hero::before { content:''; position:absolute; top:-40px; right:-40px; width:180px; height:180px; background:radial-gradient(circle, rgba(159,122,234,0.15) 0%, transparent 70%); pointer-events:none; }
+.admin-hero::after  { content:''; position:absolute; bottom:-30px; left:30%; width:120px; height:120px; background:radial-gradient(circle, rgba(246,166,35,0.08) 0%, transparent 70%); pointer-events:none; }
+.hero-tag   { font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.09em; color:var(--accent); margin-bottom:0.4rem; }
+.hero-title { font-family:'Cinzel',serif; font-size:1.5rem; font-weight:700; background:linear-gradient(135deg,#f0edff,#c4b5fd,#f6a623); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:0.2rem; }
+.hero-sub   { font-size:0.8rem; color:rgba(159,122,234,0.65); }
+.hero-btns  { display:flex; gap:0.6rem; flex-wrap:wrap; }
+
+.sec-label { display:flex; align-items:center; gap:0.75rem; margin:2rem 0 1.2rem; }
+.sec-label::after { content:''; flex:1; height:1px; background:var(--border); }
+.sec-label span { font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.09em; color:var(--ink2); white-space:nowrap; }
+
+.stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; }
+.stat-card { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius); padding:1.1rem; transition:all 0.2s; }
+.stat-card:hover { border-color:rgba(159,122,234,0.3); }
+.stat-icon { font-size:1.4rem; margin-bottom:0.4rem; }
+.stat-num  { font-family:'Cinzel',serif; font-size:1.5rem; font-weight:700; line-height:1; margin-bottom:0.2rem; background:linear-gradient(135deg,#c4b5fd,#f6a623); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.stat-lbl  { font-size:0.7rem; color:var(--ink2); }
+
+.status-row { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+.sc        { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius); padding:1.1rem; text-align:center; transition:all 0.2s; }
+.sc.green  { border-color:rgba(52,211,153,0.3); background:rgba(52,211,153,0.04); }
+.sc.red    { border-color:rgba(248,113,113,0.3); background:rgba(248,113,113,0.04); }
+.sc.purple { border-color:rgba(159,122,234,0.3); background:rgba(159,122,234,0.04); }
+.sc-icon   { font-size:1.6rem; margin-bottom:0.4rem; }
+.sc-val    { font-weight:700; font-size:0.85rem; margin-bottom:0.1rem; }
+.sc-val.on { color:var(--success); } .sc-val.off { color:var(--danger); } .sc-val.purple { color:var(--accent); }
+.sc-lbl    { font-size:0.68rem; color:var(--ink2); }
+
+.tc-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:1rem; }
+.tc      { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius); padding:1.2rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; transition:all 0.2s; }
+.tc:hover { border-color:rgba(159,122,234,0.3); }
+.tc.on   { border-color:rgba(159,122,234,0.3); background:rgba(159,122,234,0.04); }
+.tc-icon { font-size:1.3rem; margin-bottom:0.25rem; }
+.tc-lbl  { font-weight:700; font-size:0.87rem; color:var(--ink); }
+.tc-sub  { font-size:0.72rem; color:var(--ink2); }
+
+.orders-wrap { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+.orders-head { display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem; border-bottom:1px solid var(--border); flex-wrap:wrap; gap:0.5rem; }
+.orders-head h4 { font-family:'Cinzel',serif; font-size:0.85rem; font-weight:600; }
+.order-row {
+  display:grid; grid-template-columns:1.5fr 1fr 0.8fr 0.8fr auto;
+  gap:0.75rem; align-items:center;
+  padding:0.85rem 1.25rem; border-bottom:1px solid var(--border); transition:background 0.15s;
+}
+.order-row:hover { background:rgba(159,122,234,0.04); }
+.order-row:last-child { border-bottom:none; }
+.order-row.header { background:var(--surface2); font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink2); }
+.o-name  { font-size:0.84rem; font-weight:600; color:var(--ink); }
+.o-sub   { font-size:0.72rem; color:var(--ink2); }
+.o-code  { font-size:0.72rem; font-weight:700; color:var(--accent); }
+.o-price { font-size:0.84rem; font-weight:700; color:var(--ink); }
+.o-date  { font-size:0.72rem; color:var(--ink2); }
+.badge-status  { font-size:0.68rem; font-weight:700; padding:0.18rem 0.6rem; border-radius:100px; white-space:nowrap; }
+.bs-menunggu   { background:rgba(246,166,35,0.12); color:#f6a623; border:1px solid rgba(246,166,35,0.25); }
+.bs-selesai    { background:rgba(52,211,153,0.12); color:var(--success); border:1px solid rgba(52,211,153,0.25); }
+.bs-batal      { background:rgba(248,113,113,0.12); color:var(--danger); border:1px solid rgba(248,113,113,0.25); }
+.action-btns   { display:flex; gap:0.35rem; align-items:center; }
+.act-btn       { font-size:0.68rem; padding:0.18rem 0.55rem; border-radius:6px; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; font-weight:700; transition:all 0.15s; }
+.act-selesai   { background:rgba(52,211,153,0.15); color:var(--success); }
+.act-selesai:hover { background:rgba(52,211,153,0.3); }
+.act-batal     { background:rgba(248,113,113,0.12); color:var(--danger); }
+.act-batal:hover { background:rgba(248,113,113,0.25); }
+.empty-orders  { text-align:center; padding:2.5rem; color:var(--ink2); font-size:0.85rem; }
+
+.chart-wrap    { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius); padding:1.25rem; }
+.chart-title   { font-family:'Cinzel',serif; font-size:0.85rem; font-weight:600; margin-bottom:1rem; }
+.chart-bars    { display:flex; align-items:flex-end; gap:0.5rem; height:120px; }
+.chart-bar-wrap{ flex:1; display:flex; flex-direction:column; align-items:center; gap:0.3rem; height:100%; justify-content:flex-end; }
+.chart-bar     { width:100%; border-radius:5px 5px 0 0; background:linear-gradient(180deg,#9f7aea,#6d28d9); transition:height 0.5s ease; cursor:pointer; position:relative; min-height:4px; }
+.chart-bar:hover { background:linear-gradient(180deg,#f6a623,#d97706); }
+.chart-bar-tooltip { position:absolute; top:-28px; left:50%; transform:translateX(-50%); background:var(--surface2); border:1px solid var(--border2); border-radius:6px; padding:0.15rem 0.45rem; font-size:0.65rem; font-weight:700; color:var(--ink); white-space:nowrap; display:none; }
+.chart-bar:hover .chart-bar-tooltip { display:block; }
+.chart-label   { font-size:0.62rem; color:var(--ink2); text-align:center; }
+
+/* ══ PEMBUKUAN ══ */
+.buku-wrap { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+.buku-head {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:1rem 1.25rem; border-bottom:1px solid var(--border);
+  flex-wrap:wrap; gap:0.5rem;
+  background:linear-gradient(135deg,rgba(30,22,53,0.9),rgba(40,28,70,0.9));
+}
+.buku-head h4 { font-family:'Cinzel',serif; font-size:0.85rem; font-weight:600; color:var(--ink); }
+.buku-filter  { display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; }
+.buku-select  {
+  background:var(--surface2); border:1.5px solid var(--border2); border-radius:8px;
+  color:var(--ink); font-size:0.78rem; padding:0.3rem 0.7rem;
+  font-family:'DM Sans',sans-serif; cursor:pointer;
+}
+.buku-select:focus { outline:none; border-color:var(--accent); }
+
+.buku-summary { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border-bottom:1px solid var(--border); }
+.buku-sum-item  { background:var(--surface2); padding:0.85rem 1.25rem; }
+.buku-sum-label { font-size:0.68rem; color:var(--ink2); font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.25rem; }
+.buku-sum-val   { font-family:'Cinzel',serif; font-size:1.1rem; font-weight:700; }
+.buku-sum-val.income  { background:linear-gradient(135deg,#34d399,#6ee7b7); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.buku-sum-val.pending { color:#f6a623; }
+.buku-sum-val.cancel  { color:var(--danger); }
+
+.buku-table-wrap { overflow-x:auto; }
+.buku-table { width:100%; border-collapse:collapse; font-size:0.8rem; }
+.buku-table th {
+  background:var(--surface2); padding:0.65rem 1rem; text-align:left;
+  font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em;
+  color:var(--ink2); border-bottom:1px solid var(--border); white-space:nowrap;
+}
+.buku-table td   { padding:0.72rem 1rem; border-bottom:1px solid var(--border); color:var(--ink); vertical-align:middle; }
+.buku-table tr:last-child td { border-bottom:none; }
+.buku-table tr:hover td { background:rgba(159,122,234,0.04); }
+.buku-empty { text-align:center; padding:2rem; color:var(--ink2); font-size:0.85rem; }
+
+.buku-footer { padding:0.85rem 1.25rem; border-top:2px solid var(--border); display:flex; justify-content:flex-end; align-items:center; gap:1.5rem; flex-wrap:wrap; background:var(--surface2); }
+.buku-footer-label { font-size:0.78rem; color:var(--ink2); font-weight:600; }
+.buku-grand-total  { font-family:'Cinzel',serif; font-size:1rem; font-weight:700; background:linear-gradient(135deg,#c4b5fd,#f6a623); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+
+.btn-pdf {
+  display:inline-flex; align-items:center; gap:0.4rem;
+  background:linear-gradient(135deg,#dc2626,#ef4444); color:#fff;
+  border:none; border-radius:8px; padding:0.38rem 0.9rem;
+  font-size:0.78rem; font-weight:700; cursor:pointer;
+  font-family:'DM Sans',sans-serif; transition:all 0.2s;
+  box-shadow:0 3px 12px rgba(220,38,38,0.3);
+}
+.btn-pdf:hover { transform:translateY(-1px); box-shadow:0 5px 18px rgba(220,38,38,0.45); }
+
+.btn-danger { background:rgba(248,113,113,0.12); color:var(--danger); border:1.5px solid rgba(248,113,113,0.25); }
+.btn-danger:hover { background:rgba(248,113,113,0.22); }
+.logout-bar {
+  background:rgba(248,113,113,0.05); border:1.5px solid rgba(248,113,113,0.18);
+  border-radius:var(--radius); padding:1rem 1.3rem;
+  display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; margin-top:2.5rem;
+}
+.logout-info strong { color:var(--ink); }
+
+@media(max-width:640px) {
+  .stats-row { grid-template-columns:repeat(2,1fr); }
+  .status-row { grid-template-columns:1fr 1fr; }
+  .order-row  { grid-template-columns:1fr auto; }
+  .order-row.header { display:none; }
+  .buku-summary { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+<nav>
+  <a href="admin.html" class="nav-logo">Fhoenix<span>12</span> Aquarius <span class="admin-badge-nav">ADMIN</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Beranda</a></li>
+    <li><a href="produk.html">Produk</a></li>
+    <li><a href="admin.html" class="active">Admin</a></li>
+    <li><a href="cara-pesan.html">Cara Pesan</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="store-pill" id="store-pill"><div class="dot"></div> Buka</div>
+    <a href="https://wa.me/6287872334563" class="btn-wa" target="_blank">💬 WA</a>
+  </div>
+</nav>
+<div id="closed-banner">🔒 Toko tutup sementara — Hubungi WhatsApp untuk pesanan</div>
+
+<div class="page-wrap">
+
+  <div class="admin-hero fade-up">
+    <div>
+      <div class="hero-tag">⚙️ Panel Admin</div>
+      <div class="hero-title">Kelola Toko</div>
+      <div class="hero-sub">Pantau pesanan, atur produk, dan kontrol status toko.</div>
+    </div>
+    <div class="hero-btns">
+      <a href="produk.html" class="btn btn-ghost btn-sm">🛍️ Lihat Toko</a>
+    </div>
+  </div>
+
+  <div class="sec-label fade-up" style="animation-delay:0.05s"><span>📊 Ringkasan</span></div>
+  <div class="stats-row fade-up" style="animation-delay:0.07s">
+    <div class="stat-card"><div class="stat-icon">📦</div><div class="stat-num" id="st-total">0</div><div class="stat-lbl">Total Pesanan</div></div>
+    <div class="stat-card"><div class="stat-icon">⏳</div><div class="stat-num" id="st-pending">0</div><div class="stat-lbl">Menunggu</div></div>
+    <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-num" id="st-done">0</div><div class="stat-lbl">Selesai</div></div>
+    <div class="stat-card"><div class="stat-icon">💰</div><div class="stat-num" id="st-income">0</div><div class="stat-lbl">Total Pendapatan</div></div>
+  </div>
+
+  <div class="sec-label fade-up" style="animation-delay:0.1s"><span>📈 Grafik Order (7 Hari)</span></div>
+  <div class="chart-wrap fade-up" style="animation-delay:0.12s">
+    <div class="chart-title">Order Masuk Per Hari</div>
+    <div class="chart-bars" id="chart-bars"></div>
+  </div>
+
+  <div class="sec-label fade-up" style="animation-delay:0.13s"><span>🏪 Status Toko</span></div>
+  <div class="status-row fade-up" style="animation-delay:0.14s">
+    <div class="sc green" id="sc-store"><div class="sc-icon">🏪</div><div class="sc-val on" id="sv-store">Buka</div><div class="sc-lbl">Status Toko</div></div>
+    <div class="sc" id="sc-inst"><div class="sc-icon">💳</div><div class="sc-val off" id="sv-inst">Nonaktif</div><div class="sc-lbl">Bayar Bertahap</div></div>
+    <div class="sc purple" id="sc-wa"><div class="sc-icon">💬</div><div class="sc-val purple" id="sv-wa">Aktif</div><div class="sc-lbl">Auto Chat WA</div></div>
+  </div>
+
+  <div class="sec-label fade-up" style="animation-delay:0.15s"><span>🎛️ Kontrol</span></div>
+  <div class="tc-grid fade-up" style="animation-delay:0.16s">
+    <div class="tc on" id="tc-store">
+      <div><div class="tc-icon">🏪</div><div class="tc-lbl">Status Toko</div><div class="tc-sub">Buka / tutup toko</div></div>
+      <label class="toggle"><input type="checkbox" id="t-store" checked onchange="toggleStore(this.checked);refreshStatus()"><span class="toggle-track"></span></label>
+    </div>
+    <div class="tc" id="tc-inst">
+      <div><div class="tc-icon">💳</div><div class="tc-lbl">Bayar Bertahap</div><div class="tc-sub">Aktifkan fitur DP 50%</div></div>
+      <label class="toggle"><input type="checkbox" id="t-inst" onchange="toggleInstallment(this.checked);refreshStatus()"><span class="toggle-track"></span></label>
+    </div>
+    <div class="tc on" id="tc-wa">
+      <div><div class="tc-icon">💬</div><div class="tc-lbl">Auto Chat WA</div><div class="tc-sub">Pesan otomatis setelah order</div></div>
+      <label class="toggle"><input type="checkbox" id="t-wa" checked onchange="toggleAutoWA(this.checked);refreshStatus()"><span class="toggle-track"></span></label>
+    </div>
+  </div>
+
+  <div class="sec-label fade-up" style="animation-delay:0.18s"><span>📋 Daftar Pesanan</span></div>
+  <div class="orders-wrap fade-up" style="animation-delay:0.2s">
+    <div class="orders-head">
+      <h4>Semua Pesanan</h4>
+      <button class="btn btn-ghost btn-sm" onclick="clearOrders()">🗑️ Hapus Semua</button>
+    </div>
+    <div class="order-row header">
+      <div>Produk / Pelanggan</div><div>Harga</div><div>Metode</div><div>Tanggal</div><div>Aksi</div>
+    </div>
+    <div id="order-rows"></div>
+  </div>
+
+  <!-- ══ PEMBUKUAN ══ -->
+  <div class="sec-label fade-up" style="animation-delay:0.22s"><span>📒 Pembukuan Transaksi</span></div>
+  <div class="buku-wrap fade-up" style="animation-delay:0.24s">
+    <div class="buku-head">
+      <h4>📒 Laporan Pembukuan</h4>
+      <div class="buku-filter">
+        <select class="buku-select" id="buku-filter-status" onchange="renderBukuTable()">
+          <option value="all">Semua Status</option>
+          <option value="Menunggu">Menunggu</option>
+          <option value="Selesai">Selesai</option>
+          <option value="Dibatalkan">Dibatalkan</option>
+        </select>
+        <select class="buku-select" id="buku-filter-bulan" onchange="renderBukuTable()">
+          <option value="all">Semua Bulan</option>
+        </select>
+        <button class="btn-pdf" onclick="exportPDF()">📄 Export PDF</button>
+      </div>
+    </div>
+
+    <div class="buku-summary">
+      <div class="buku-sum-item">
+        <div class="buku-sum-label">💰 Total Pendapatan (Selesai)</div>
+        <div class="buku-sum-val income" id="buku-income">Rp0</div>
+      </div>
+      <div class="buku-sum-item">
+        <div class="buku-sum-label">⏳ Menunggu Konfirmasi</div>
+        <div class="buku-sum-val pending" id="buku-pending">Rp0</div>
+      </div>
+      <div class="buku-sum-item">
+        <div class="buku-sum-label">❌ Dibatalkan</div>
+        <div class="buku-sum-val cancel" id="buku-cancel">Rp0</div>
+      </div>
+    </div>
+
+    <div class="buku-table-wrap">
+      <table class="buku-table">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Kode</th>
+            <th>Tanggal</th>
+            <th>Produk</th>
+            <th>Pelanggan / WA</th>
+            <th>Metode</th>
+            <th>Harga</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="buku-tbody">
+          <tr><td colspan="8" class="buku-empty">📭 Belum ada data transaksi</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="buku-footer">
+      <span class="buku-footer-label">Total Transaksi Ditampilkan:</span>
+      <span class="buku-grand-total" id="buku-grand-total">Rp0</span>
+    </div>
+  </div>
+
+  <div class="logout-bar fade-up" style="animation-delay:0.28s">
+    <div class="logout-info" style="font-size:0.82rem;color:var(--ink2)">Masuk sebagai <strong>Admin</strong> · Sesi tersimpan di browser</div>
+    <button class="btn btn-danger btn-sm" onclick="doLogout()">🚪 Logout Admin</button>
+  </div>
+
+</div>
+<footer>
+  <strong>Fhoenix12 Aquarius</strong> · Admin Panel<br>
+  <span style="font-size:0.72rem;margin-top:0.35rem;display:block;opacity:0.6">© 2025 Fhoenix12 Aquarius</span>
+</footer>
+
+<!-- jsPDF + autoTable CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="auth.js"></script>
+<script src="shared.js"></script>
+<script>
+requireAdmin();
+
+function doLogout() {
+  if (confirm('Yakin mau logout?')) {
+    sessionStorage.removeItem('fx_admin_v1');
+    window.location.href = 'login.html';
+  }
+}
+function clearOrders() {
+  if (confirm('Hapus semua pesanan?')) {
+    localStorage.removeItem('fx_orders');
+    renderOrders(); renderStats(); renderChart(); renderBukuTable();
+  }
+}
+
+function rp(n) { return n === 0 ? 'Hubungi WA' : 'Rp' + n.toLocaleString('id-ID'); }
+function getOrders() { return JSON.parse(localStorage.getItem('fx_orders') || '[]'); }
+
+// ── UPDATE STATUS ──────────────────────────────────────────────
+function updateOrderStatus(id, status) {
+  const orders = getOrders();
+  const idx = orders.findIndex(o => o.id === id);
+  if (idx >= 0) { orders[idx].status = status; localStorage.setItem('fx_orders', JSON.stringify(orders)); }
+
+  const users = JSON.parse(localStorage.getItem('fx_users') || '{}');
+  for (const email in users) {
+    if (!users[email].orders) continue;
+    users[email].orders.forEach((o, i) => {
+      const uid = String(o.id || '');
+      const tid = String(id);
+      if (uid === tid || uid === tid.replace('FX-','') || ('FX-'+uid) === tid) {
+        users[email].orders[i].status = status;
+      }
+    });
+  }
+  localStorage.setItem('fx_users', JSON.stringify(users));
+  renderOrders(); renderStats(); renderChart(); renderBukuTable();
+}
+
+// ── STATS ──────────────────────────────────────────────────────
+function renderStats() {
+  const o = getOrders();
+  document.getElementById('st-total').textContent   = o.length;
+  document.getElementById('st-pending').textContent = o.filter(x => x.status === 'Menunggu').length;
+  document.getElementById('st-done').textContent    = o.filter(x => x.status === 'Selesai').length;
+  const inc = o.filter(x => x.status === 'Selesai').reduce((s,x) => s+(x.price||0), 0);
+  document.getElementById('st-income').textContent  = inc >= 1000000 ? 'Rp'+(inc/1e6).toFixed(1)+'jt' : inc >= 1000 ? 'Rp'+(inc/1000).toFixed(0)+'rb' : rp(inc);
+}
+
+// ── CHART ──────────────────────────────────────────────────────
+function renderChart() {
+  const orders = getOrders(), days = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate()-i);
+    days.push({ key: d.toLocaleDateString('id-ID',{weekday:'short'}), count: orders.filter(o => new Date(o.date).toDateString()===d.toDateString()).length });
+  }
+  const max = Math.max(...days.map(d=>d.count),1);
+  document.getElementById('chart-bars').innerHTML = days.map(d=>`
+    <div class="chart-bar-wrap">
+      <div class="chart-bar" style="height:${Math.max(8,(d.count/max)*100)}%">
+        <div class="chart-bar-tooltip">${d.count} order</div>
+      </div>
+      <div class="chart-label">${d.key}</div>
+    </div>`).join('');
+}
+
+// ── ORDERS TABLE ────────────────────────────────────────────────
+function renderOrders() {
+  const orders = getOrders();
+  const container = document.getElementById('order-rows');
+  if (!orders.length) { container.innerHTML = '<div class="empty-orders">📭 Belum ada pesanan masuk</div>'; return; }
+  function bsClass(s) { return s==='Selesai'?'bs-selesai':s==='Dibatalkan'?'bs-batal':'bs-menunggu'; }
+  container.innerHTML = orders.map(o=>`
+    <div class="order-row">
+      <div><div class="o-name">${o.produk||o.name||'—'}</div><div class="o-sub">${o.nama||''} · ${o.wa||''}</div><div class="o-code">#${o.id}</div></div>
+      <div class="o-price">${rp(o.price||0)}</div>
+      <div class="o-sub">${(o.metode||'—').toUpperCase()}</div>
+      <div class="o-date">${new Date(o.date).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</div>
+      <div class="action-btns">
+        ${o.status!=='Selesai'    ?`<button class="act-btn act-selesai" onclick="updateOrderStatus('${o.id}','Selesai')">✅ Selesai</button>`:''}
+        ${o.status!=='Dibatalkan' ?`<button class="act-btn act-batal"   onclick="updateOrderStatus('${o.id}','Dibatalkan')">❌</button>`:''}
+        <span class="badge-status ${bsClass(o.status)}">${o.status}</span>
+      </div>
+    </div>`).join('');
+}
+
+// ── PEMBUKUAN ───────────────────────────────────────────────────
+function getFilteredOrders() {
+  const sf = document.getElementById('buku-filter-status').value;
+  const bf = document.getElementById('buku-filter-bulan').value;
+  let o = getOrders();
+  if (sf !== 'all') o = o.filter(x => x.status === sf);
+  if (bf !== 'all') o = o.filter(x => {
+    const d = new Date(x.date);
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}` === bf;
+  });
+  return o;
+}
+
+function populateBulanFilter() {
+  const sel = document.getElementById('buku-filter-bulan');
+  const seen = new Set();
+  getOrders().forEach(o => {
+    const d = new Date(o.date);
+    const k = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    if (!seen.has(k)) {
+      seen.add(k);
+      const opt = document.createElement('option');
+      opt.value = k;
+      opt.textContent = d.toLocaleDateString('id-ID',{month:'long',year:'numeric'});
+      sel.appendChild(opt);
+    }
+  });
+}
+
+function statusBadge(s) {
+  if (s==='Selesai')    return `<span style="background:rgba(52,211,153,0.15);color:#34d399;border:1px solid rgba(52,211,153,0.3);font-size:0.68rem;font-weight:700;padding:0.15rem 0.55rem;border-radius:100px;">✅ Selesai</span>`;
+  if (s==='Dibatalkan') return `<span style="background:rgba(248,113,113,0.12);color:#f87171;border:1px solid rgba(248,113,113,0.3);font-size:0.68rem;font-weight:700;padding:0.15rem 0.55rem;border-radius:100px;">❌ Dibatalkan</span>`;
+  return `<span style="background:rgba(246,166,35,0.12);color:#f6a623;border:1px solid rgba(246,166,35,0.25);font-size:0.68rem;font-weight:700;padding:0.15rem 0.55rem;border-radius:100px;">⏳ Menunggu</span>`;
+}
+
+function renderBukuTable() {
+  const orders = getFilteredOrders();
+  const all    = getOrders();
+
+  // Summary selalu dari semua data
+  document.getElementById('buku-income').textContent  = rp(all.filter(o=>o.status==='Selesai').reduce((s,o)=>s+(o.price||0),0));
+  document.getElementById('buku-pending').textContent = rp(all.filter(o=>o.status==='Menunggu').reduce((s,o)=>s+(o.price||0),0));
+  document.getElementById('buku-cancel').textContent  = rp(all.filter(o=>o.status==='Dibatalkan').reduce((s,o)=>s+(o.price||0),0));
+
+  const tbody = document.getElementById('buku-tbody');
+  if (!orders.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="buku-empty">📭 Tidak ada data untuk filter ini</td></tr>';
+    document.getElementById('buku-grand-total').textContent = 'Rp0';
+    return;
+  }
+
+  document.getElementById('buku-grand-total').textContent = rp(orders.reduce((s,o)=>s+(o.price||0),0));
+  tbody.innerHTML = orders.map((o,i)=>`
+    <tr>
+      <td style="color:var(--ink2);font-size:0.72rem;">${i+1}</td>
+      <td style="font-size:0.72rem;font-weight:700;color:var(--accent);">#${o.id}</td>
+      <td style="font-size:0.76rem;white-space:nowrap;">${new Date(o.date).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})}</td>
+      <td style="font-weight:600;">${o.produk||o.name||'—'}</td>
+      <td style="font-size:0.78rem;color:var(--ink2);">${o.nama||'—'}<br><span style="font-size:0.7rem;">${o.wa||''}</span></td>
+      <td style="font-size:0.76rem;">${(o.metode||'—').toUpperCase()}</td>
+      <td style="font-weight:700;font-family:'Cinzel',serif;">${rp(o.price||0)}</td>
+      <td>${statusBadge(o.status)}</td>
+    </tr>`).join('');
+}
+
+// ── EXPORT PDF ──────────────────────────────────────────────────
+function exportPDF() {
+  // Pastikan jsPDF sudah load
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    alert('Library PDF belum siap, coba lagi dalam 1-2 detik.');
+    return;
+  }
+
+  const orders = getFilteredOrders();
+  if (!orders.length) { alert('Tidak ada data untuk diekspor.'); return; }
+
+  const { jsPDF } = window.jspdf;
+  const doc  = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+  const pw   = doc.internal.pageSize.getWidth();
+  const now  = new Date();
+  const tgl  = now.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+  const jam  = now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+
+  // Header
+  doc.setFillColor(18,16,58);
+  doc.rect(0,0,pw,30,'F');
+  doc.setFontSize(15); doc.setTextColor(196,181,253); doc.setFont('helvetica','bold');
+  doc.text('FHOENIX12 AQUARIUS',14,12);
+  doc.setFontSize(8.5); doc.setTextColor(180,160,220); doc.setFont('helvetica','normal');
+  doc.text('Laporan Pembukuan Transaksi — Toko Digital & Fisik',14,19);
+  doc.text(`Dicetak: ${tgl} pukul ${jam}`,pw-14,12,{align:'right'});
+  doc.text(`Total data: ${orders.length} transaksi`,pw-14,19,{align:'right'});
+
+  // Ringkasan keuangan
+  const income  = orders.filter(o=>o.status==='Selesai').reduce((s,o)=>s+(o.price||0),0);
+  const pending = orders.filter(o=>o.status==='Menunggu').reduce((s,o)=>s+(o.price||0),0);
+  const cancel  = orders.filter(o=>o.status==='Dibatalkan').reduce((s,o)=>s+(o.price||0),0);
+  const total   = orders.reduce((s,o)=>s+(o.price||0),0);
+
+  const sumItems = [
+    {label:'Pendapatan (Selesai)', val:rp(income),  color:[52,211,153]},
+    {label:'Menunggu',             val:rp(pending), color:[246,166,35]},
+    {label:'Dibatalkan',           val:rp(cancel),  color:[248,113,113]},
+    {label:'Total',                val:rp(total),   color:[196,181,253]},
+  ];
+  const sw = (pw-28)/4;
+  sumItems.forEach((item,i)=>{
+    const x = 14 + i*sw;
+    doc.setFillColor(25,22,50);
+    doc.roundedRect(x,33,sw-2,16,2,2,'F');
+    doc.setFontSize(7); doc.setTextColor(160,150,200); doc.setFont('helvetica','normal');
+    doc.text(item.label, x+3, 39);
+    doc.setFontSize(9.5); doc.setTextColor(...item.color); doc.setFont('helvetica','bold');
+    doc.text(item.val, x+3, 46);
+  });
+
+  // Tabel
+  doc.autoTable({
+    startY: 53,
+    head: [['No','Kode','Tanggal','Produk','Pelanggan / WA','Metode','Harga','Status']],
+    body: orders.map((o,i) => [
+      i+1,
+      '#'+o.id,
+      new Date(o.date).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}),
+      o.produk||o.name||'—',
+      (o.nama||'—') + (o.wa ? '\n'+o.wa : ''),
+      (o.metode||'—').toUpperCase(),
+      rp(o.price||0),
+      o.status
+    ]),
+    theme: 'grid',
+    styles: { fontSize:8, cellPadding:3, textColor:[220,215,240], lineColor:[50,45,80], lineWidth:0.3, overflow:'linebreak' },
+    headStyles: { fillColor:[40,32,80], textColor:[196,181,253], fontStyle:'bold', fontSize:7.5 },
+    alternateRowStyles: { fillColor:[22,20,45] },
+    bodyStyles: { fillColor:[16,14,36] },
+    columnStyles: {
+      0: { halign:'center', cellWidth:10 },
+      1: { cellWidth:28, textColor:[159,122,234] },
+      2: { cellWidth:28 },
+      3: { cellWidth:52 },
+      4: { cellWidth:44 },
+      5: { halign:'center', cellWidth:22 },
+      6: { halign:'right', cellWidth:32, fontStyle:'bold', textColor:[196,181,253] },
+      7: { halign:'center', cellWidth:28 },
+    },
+    didParseCell: function(data) {
+      if (data.section==='body' && data.column.index===7) {
+        const s = data.cell.raw;
+        if (s==='Selesai')    data.cell.styles.textColor=[52,211,153];
+        else if (s==='Dibatalkan') data.cell.styles.textColor=[248,113,113];
+        else data.cell.styles.textColor=[246,166,35];
+      }
+    },
+    didDrawPage: function() {
+      const ph = doc.internal.pageSize.getHeight();
+      doc.setFillColor(18,16,58); doc.rect(0,ph-9,pw,9,'F');
+      doc.setFontSize(7); doc.setTextColor(140,130,180); doc.setFont('helvetica','normal');
+      doc.text('Fhoenix12 Aquarius — Laporan Pembukuan',14,ph-3.5);
+      doc.text('Halaman '+doc.internal.getCurrentPageInfo().pageNumber, pw-14, ph-3.5, {align:'right'});
+    },
+    margin: {left:14,right:14},
+  });
+
+  // Grand total row
+  const fy = doc.lastAutoTable.finalY + 3;
+  doc.setFillColor(30,26,60); doc.rect(14,fy,pw-28,10,'F');
+  doc.setFontSize(9); doc.setFont('helvetica','bold');
+  doc.setTextColor(196,181,253); doc.text('TOTAL KESELURUHAN',18,fy+7);
+  doc.setTextColor(246,166,35);  doc.text(rp(total), pw-18, fy+7, {align:'right'});
+
+  const fname = `pembukuan_fhoenix12_${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}.pdf`;
+  doc.save(fname);
+}
+
+// ── STATUS REFRESH ──────────────────────────────────────────────
+function refreshStatus() {
+  const svS=document.getElementById('sv-store'), scS=document.getElementById('sc-store'), tcS=document.getElementById('tc-store');
+  if (isStoreClosed) { svS.textContent='Tutup'; svS.className='sc-val off'; scS.className='sc red'; tcS.classList.remove('on'); }
+  else               { svS.textContent='Buka';  svS.className='sc-val on';  scS.className='sc green'; tcS.classList.add('on'); }
+  const svI=document.getElementById('sv-inst'), scI=document.getElementById('sc-inst'), tcI=document.getElementById('tc-inst');
+  if (isInstallment) { svI.textContent='Aktif';    svI.className='sc-val on';  scI.className='sc green'; tcI.classList.add('on'); }
+  else               { svI.textContent='Nonaktif'; svI.className='sc-val off'; scI.className='sc';       tcI.classList.remove('on'); }
+  const svW=document.getElementById('sv-wa');
+  svW.textContent=autoWA?'Aktif':'Nonaktif';
+  svW.className=autoWA?'sc-val purple':'sc-val off';
+}
+
+// ── INIT ────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  refreshStatus();
+  renderStats();
+  renderChart();
+  renderOrders();
+  populateBulanFilter();
+  renderBukuTable();
+});
+</script>
+</body>
+</html>

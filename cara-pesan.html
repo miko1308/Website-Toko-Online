@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cara Pesan — Fhoenix12 Aquarius</title>
+<link rel="stylesheet" href="style.css">
+<style>
+/* ─── STEP CARDS ─── */
+.steps-list { display: flex; flex-direction: column; gap: 1rem; }
+
+.step-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex;
+  gap: 0;
+  transition: box-shadow 0.2s, border-color 0.2s;
+  position: relative;
+}
+.step-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 6px 28px rgba(42,95,255,0.1);
+}
+
+.step-num-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.3rem 0 1.3rem 1.2rem;
+  min-width: 52px;
+}
+.step-num {
+  width: 36px; height: 36px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 0.85rem;
+  flex-shrink: 0;
+}
+.step-line {
+  flex: 1;
+  width: 2px;
+  background: var(--border);
+  margin-top: 0.5rem;
+  min-height: 16px;
+}
+.step-card:last-child .step-line { display: none; }
+
+.step-content {
+  padding: 1.3rem 1.3rem 1.3rem 0.9rem;
+  flex: 1;
+}
+.step-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  margin-bottom: 0.25rem;
+}
+.step-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 0.4rem;
+  color: var(--ink);
+}
+.step-desc {
+  font-size: 0.85rem;
+  color: var(--ink2);
+  line-height: 1.7;
+}
+
+/* ─── TIP BOX ─── */
+.tip-box {
+  background: var(--accent-light);
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  margin-top: 0.75rem;
+  font-size: 0.82rem;
+  color: var(--ink);
+  border-left: 3px solid var(--accent);
+}
+.tip-box strong { color: var(--accent); }
+
+/* ─── PILL TAGS ─── */
+.step-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.65rem; }
+.step-tag {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ink2);
+}
+
+/* ─── FAQ SECTION ─── */
+.faq-list { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0; }
+.faq-item {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.faq-item:hover { border-color: var(--accent); }
+.faq-item.open  { border-color: var(--accent); }
+
+.faq-head {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 1rem 1.1rem;
+  cursor: pointer; user-select: none;
+}
+.faq-q { flex: 1; font-weight: 600; font-size: 0.88rem; }
+.faq-chev { color: var(--ink2); font-size: 0.75rem; transition: transform 0.2s; }
+.faq-item.open .faq-chev { transform: rotate(180deg); color: var(--accent); }
+
+.faq-body {
+  display: none;
+  padding: 0 1.1rem 1.1rem;
+  font-size: 0.84rem; color: var(--ink2); line-height: 1.7;
+  border-top: 1px solid var(--surface2); padding-top: 0.9rem;
+}
+.faq-item.open .faq-body { display: block; animation: fadeIn 0.2s; }
+
+/* ─── SECTION DIVIDER ─── */
+.section-label {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.25rem; margin-top: 2.5rem;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.section-label span {
+  font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--ink2); white-space: nowrap;
+}
+
+/* ─── PAYMENT METHODS ─── */
+.pay-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;
+}
+.pay-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex; align-items: center; gap: 0.75rem;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.pay-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+.pay-icon { font-size: 1.5rem; flex-shrink: 0; }
+.pay-info-name { font-weight: 700; font-size: 0.88rem; }
+.pay-info-sub  { font-size: 0.75rem; color: var(--ink2); }
+
+/* ─── BOTTOM CTA ─── */
+.cp-cta {
+  margin-top: 2.5rem;
+  background: linear-gradient(135deg, #1b0f40 0%, #2a1f6e 100%);
+  border-radius: var(--radius); padding: 2rem 1.5rem; text-align: center; color: #fff;
+}
+.cp-cta h3 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.5rem; font-weight: 400; margin-bottom: 0.5rem;
+}
+.cp-cta p { font-size: 0.85rem; color: rgba(255,255,255,0.7); margin-bottom: 1.25rem; }
+.btn-white { background: #fff; color: var(--accent); font-weight: 700; }
+.btn-white:hover { background: #f0f4ff; }
+.btn-outline-white { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,0.5); }
+.btn-outline-white:hover { background: rgba(255,255,255,0.1); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Fhoenix<span>12</span> Aquarius</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Beranda</a></li>
+    <li><a href="produk.html">Produk</a></li>
+    <li><a href="cara-pesan.html" class="active">Cara Pesan</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="store-pill" id="store-pill"><div class="dot"></div> Buka</div>
+    <a href="https://wa.me/6287872334563" class="btn-wa" target="_blank">💬 WA</a>
+  </div>
+</nav>
+
+<div id="closed-banner">🔒 Toko tutup sementara — Hubungi WhatsApp untuk pesanan</div>
+
+<div class="page-wrap">
+  <div class="page-header fade-up">
+    <div class="page-tag">📋 Panduan</div>
+    <h1>Cara Memesan di Fhoenix12</h1>
+    <p>Ikuti langkah-langkah berikut untuk melakukan pemesanan dengan cepat dan mudah.</p>
+  </div>
+
+  <!-- LANGKAH-LANGKAH -->
+  <div class="section-label fade-up" style="animation-delay:0.05s">
+    <span>🛒 Langkah Pemesanan</span>
+  </div>
+
+  <div class="steps-list fade-up" style="animation-delay:0.1s">
+
+    <!-- STEP 1 -->
+    <div class="step-card">
+      <div class="step-num-col">
+        <div class="step-num">1</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-label">Langkah 1</div>
+        <div class="step-title">Pilih Produk yang Kamu Inginkan</div>
+        <div class="step-desc">
+          Kunjungi halaman <strong>Produk</strong> dan pilih produk yang ingin dibeli — mulai dari Google Play Card, Visa Platform Pass, Voucher E-Commerce, hingga produk fisik.
+        </div>
+        <div class="step-tags">
+          <span class="step-tag">🎮 Digital</span>
+          <span class="step-tag">📦 Fisik</span>
+          <span class="step-tag">🎁 Voucher</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-card">
+      <div class="step-num-col">
+        <div class="step-num">2</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-label">Langkah 2</div>
+        <div class="step-title">Klik Tombol "Pesan Sekarang"</div>
+        <div class="step-desc">
+          Pada halaman produk, klik tombol <strong>Pesan Sekarang</strong>. Sebuah form akan muncul untuk mengisi data diri dan detail pesanan kamu.
+        </div>
+        <div class="tip-box">
+          <strong>Tips:</strong> Cek dulu status toko di pojok kanan atas. Jika toko sedang tutup, pesanan tetap bisa masuk lewat WhatsApp.
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step-card">
+      <div class="step-num-col">
+        <div class="step-num">3</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-label">Langkah 3</div>
+        <div class="step-title">Isi Form Pesanan</div>
+        <div class="step-desc">
+          Lengkapi form dengan data yang diminta: <strong>nama</strong>, <strong>catatan pesanan</strong> (jika ada), dan <strong>metode pembayaran</strong> yang kamu pilih.
+        </div>
+        <div class="step-tags">
+          <span class="step-tag">🏦 BRImo</span>
+          <span class="step-tag">💳 Transfer Bank</span>
+          <span class="step-tag">📱 QRIS</span>
+          <span class="step-tag">💵 COD</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step-card">
+      <div class="step-num-col">
+        <div class="step-num">4</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-label">Langkah 4</div>
+        <div class="step-title">Konfirmasi Pesanan</div>
+        <div class="step-desc">
+          Review ringkasan pesananmu — nama, produk, total harga, dan metode bayar. Jika sudah benar, klik <strong>Konfirmasi Pesanan</strong>.
+        </div>
+        <div class="tip-box">
+          <strong>Catatan:</strong> Harga bersifat fix dan tidak bisa diubah setelah konfirmasi. Pastikan semua detail sudah benar sebelum melanjutkan.
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step-card">
+      <div class="step-num-col">
+        <div class="step-num">5</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-label">Langkah 5</div>
+        <div class="step-title">Lanjutkan via WhatsApp</div>
+        <div class="step-desc">
+          Sistem akan otomatis membuka WhatsApp dengan pesan pesanan yang <strong>sudah terisi lengkap</strong>. Kamu cukup klik <strong>Kirim</strong> — tidak perlu mengetik ulang apapun!
+        </div>
+        <div class="tip-box">
+          <strong>Pesan otomatis berisi:</strong> Nama kamu · Nama produk · Total harga · Kode pesanan · Metode bayar
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="step-card">
+      <div class="step-num-col">
+        <div class="step-num">6</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-label">Langkah 6</div>
+        <div class="step-title">Selesaikan Pembayaran</div>
+        <div class="step-desc">
+          Lakukan pembayaran sesuai metode yang kamu pilih, lalu kirimkan <strong>bukti transfer</strong> ke WhatsApp penjual. Pesanan akan diproses setelah pembayaran dikonfirmasi.
+        </div>
+        <div class="tip-box">
+          <strong>Penting:</strong> Selesaikan pembayaran tepat waktu. Pesanan yang tidak dikonfirmasi dalam batas waktu akan dibatalkan otomatis.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- METODE PEMBAYARAN -->
+  <div class="section-label fade-up" style="animation-delay:0.15s">
+    <span>💳 Metode Pembayaran</span>
+  </div>
+
+  <div class="pay-grid fade-up" style="animation-delay:0.17s">
+    <div class="pay-card">
+      <div class="pay-icon">🏦</div>
+      <div>
+        <div class="pay-info-name">BRImo</div>
+        <div class="pay-info-sub">Transfer via aplikasi BRI</div>
+      </div>
+    </div>
+    <div class="pay-card">
+      <div class="pay-icon">💳</div>
+      <div>
+        <div class="pay-info-name">Transfer Bank</div>
+        <div class="pay-info-sub">Transfer antar bank</div>
+      </div>
+    </div>
+    <div class="pay-card">
+      <div class="pay-icon">📱</div>
+      <div>
+        <div class="pay-info-name">QRIS</div>
+        <div class="pay-info-sub">Scan & bayar dari semua e-wallet</div>
+      </div>
+    </div>
+    <div class="pay-card">
+      <div class="pay-icon">💵</div>
+      <div>
+        <div class="pay-info-name">COD / Tunai</div>
+        <div class="pay-info-sub">Bayar langsung saat terima barang</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section-label fade-up" style="animation-delay:0.2s">
+    <span>❓ Pertanyaan Umum</span>
+  </div>
+
+  <div class="faq-list fade-up" style="animation-delay:0.22s">
+
+    <div class="faq-item open">
+      <div class="faq-head" onclick="toggleFaq(this)">
+        <div class="faq-q">Apakah harga bisa ditawar?</div>
+        <span class="faq-chev">▼</span>
+      </div>
+      <div class="faq-body">
+        Tidak. Semua harga yang tertera adalah harga <strong>fix dan final</strong>. Tidak ada negosiasi. Ini untuk menjamin keadilan bagi semua pembeli. Khusus Top Up Custom, harga ditentukan via diskusi di WhatsApp.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-head" onclick="toggleFaq(this)">
+        <div class="faq-q">Berapa lama proses pengiriman/pengiriman produk?</div>
+        <span class="faq-chev">▼</span>
+      </div>
+      <div class="faq-body">
+        Produk digital biasanya diproses dalam beberapa menit setelah pembayaran dikonfirmasi. Produk fisik membutuhkan waktu sesuai kurir yang dipilih. Detail lebih lanjut bisa ditanyakan langsung via WhatsApp.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-head" onclick="toggleFaq(this)">
+        <div class="faq-q">Bagaimana jika pesanan saya dibatalkan otomatis?</div>
+        <span class="faq-chev">▼</span>
+      </div>
+      <div class="faq-body">
+        Kamu bisa melakukan pemesanan ulang kapan saja. Pastikan untuk menyelesaikan pembayaran tepat waktu pada pemesanan berikutnya. Jika ada kendala, hubungi penjual via WhatsApp sebelum batas waktu habis.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-head" onclick="toggleFaq(this)">
+        <div class="faq-q">Apakah bisa bayar DP dulu?</div>
+        <span class="faq-chev">▼</span>
+      </div>
+      <div class="faq-body">
+        Ya, jika fitur <strong>Pembayaran Bertahap</strong> diaktifkan oleh penjual. Kamu cukup bayar 50% di awal, sisanya setelah pesanan selesai. Pilihan ini muncul di form pemesanan jika tersedia.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-head" onclick="toggleFaq(this)">
+        <div class="faq-q">Toko sedang tutup, apakah masih bisa pesan?</div>
+        <span class="faq-chev">▼</span>
+      </div>
+      <div class="faq-body">
+        Saat toko tutup, pesanan online dinonaktifkan sementara. Namun kamu tetap bisa menghubungi penjual langsung via <strong>WhatsApp</strong> untuk melakukan pemesanan secara manual.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CTA -->
+  <div class="cp-cta fade-up" style="animation-delay:0.25s">
+    <h3>Mulai Pesan Sekarang!</h3>
+    <p>Sudah paham cara pesan? Yuk langsung pilih produkmu.</p>
+    <a href="produk.html" class="btn btn-white btn-sm" style="padding:0.7rem 1.5rem;font-size:0.9rem">🛒 Lihat Produk</a>
+    &nbsp;
+    <a href="https://wa.me/6287872334563" class="btn btn-outline-white btn-sm" style="padding:0.7rem 1.5rem;font-size:0.9rem" target="_blank">💬 Tanya via WA</a>
+  </div>
+
+</div>
+
+<footer>
+  <strong>Fhoenix12 Aquarius</strong> · Toko Digital & Fisik Terpercaya<br>
+  <span style="font-size:0.75rem;margin-top:0.4rem;display:block">© 2025 Fhoenix12 Aquarius</span>
+  <a href="login.html" style="font-size:0.7rem;color:var(--ink2);text-decoration:none;opacity:0.4;display:inline-block;margin-top:0.5rem;transition:opacity 0.2s" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='0.4'">⚙️ Admin</a>
+</footer>
+
+    <div class="admin-row">
+      <span class="admin-label">Bayar Bertahap</span>
+      <label class="toggle"><input type="checkbox" id="t-inst" onchange="toggleInstallment(this.checked)"><span class="toggle-track"></span></label>
+    </div>
+    <div class="admin-row">
+      <span class="admin-label">Auto Chat WA</span>
+      <label class="toggle"><input type="checkbox" id="t-wa" checked onchange="toggleAutoWA(this.checked)"><span class="toggle-track"></span></label>
+    </div>
+  </div>
+
+<script src="auth.js"></script>
+<script src="shared.js"></script>
+<script>
+function toggleFaq(head) {
+  const item = head.parentElement;
+  item.classList.toggle('open');
+}
+</script>
+</body>
+</html>

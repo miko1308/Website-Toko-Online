@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Admin — Fhoenix12 Aquarius</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+
+.login-wrap {
+  width: 100%; max-width: 390px;
+}
+
+.login-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 22px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(167,139,250,0.1);
+  animation: slideUp 0.35s ease;
+  position: relative;
+  overflow: hidden;
+}
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: -60px; left: -60px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(167,139,250,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.login-card::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; right: -40px;
+  width: 160px; height: 160px;
+  background: radial-gradient(circle, rgba(244,114,182,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.login-logo { text-align: center; margin-bottom: 2rem; }
+.lock-anim {
+  font-size: 2.8rem; display: block; margin-bottom: 0.6rem;
+  animation: float 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 16px rgba(167,139,250,0.5));
+}
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+
+.logo-text {
+  font-family: 'Instrument Serif', serif; font-size: 1.5rem; color: var(--ink); letter-spacing: 0.01em;
+}
+.logo-text span { color: var(--accent); }
+.admin-badge {
+  display: inline-block; margin-top: 0.4rem;
+  background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(167,139,250,0.15));
+  border: 1px solid rgba(167,139,250,0.3);
+  border-radius: 100px; padding: 0.22rem 0.85rem;
+  font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--accent);
+}
+
+.login-heading {
+  font-family: 'Instrument Serif', serif; font-size: 1.2rem; margin-bottom: 0.2rem;
+  background: linear-gradient(135deg, #f0eeff, #a78bfa);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.login-sub { font-size: 0.82rem; color: var(--ink2); margin-bottom: 1.75rem; }
+
+.error-box {
+  display: none; background: rgba(248,113,113,0.1);
+  border: 1px solid rgba(248,113,113,0.3); border-radius: 10px;
+  padding: 0.7rem 1rem; font-size: 0.82rem; color: var(--danger);
+  margin-bottom: 1rem; animation: fadeIn 0.15s;
+}
+.error-box.show { display: flex; align-items: center; gap: 0.5rem; }
+
+.pass-wrap { position: relative; }
+.pass-wrap input { padding-right: 3.2rem; }
+.eye-btn {
+  position: absolute; right: 0.9rem; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer; font-size: 1rem;
+  color: var(--ink2); transition: color 0.15s; padding: 0;
+}
+.eye-btn:hover { color: var(--accent); }
+
+.btn-login {
+  width: 100%; padding: 0.85rem; border-radius: 12px; border: none; cursor: pointer;
+  background: linear-gradient(135deg, #7c3aed, #a78bfa);
+  color: #fff; font-size: 0.95rem; font-weight: 700;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  box-shadow: 0 6px 24px rgba(124,58,237,0.4);
+  transition: all 0.2s; margin-top: 0.5rem;
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+}
+.btn-login:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(124,58,237,0.5); }
+.btn-login:active { transform: translateY(0); }
+
+.back-link { display: block; text-align: center; margin-top: 1.4rem; font-size: 0.8rem; color: var(--ink2); text-decoration: none; transition: color 0.15s; }
+.back-link:hover { color: var(--accent); }
+
+@keyframes shake {
+  0%,100%{transform:translateX(0)} 20%{transform:translateX(-10px)}
+  40%{transform:translateX(10px)} 60%{transform:translateX(-7px)} 80%{transform:translateX(7px)}
+}
+.shake { animation: shake 0.4s ease !important; }
+</style>
+</head>
+<body>
+<div class="login-wrap">
+  <div class="login-card" id="login-card">
+    <div class="login-logo">
+      <span class="lock-anim">🔐</span>
+      <div class="logo-text">Fhoenix<span>12</span> Aquarius</div>
+      <div class="admin-badge">Admin Panel</div>
+    </div>
+
+    <div class="login-heading">Selamat Datang</div>
+    <div class="login-sub">Masukkan password untuk mengakses panel admin.</div>
+
+    <div class="error-box" id="err-box">❌ Password salah. Coba lagi.</div>
+
+    <div class="form-group">
+      <label>Password Admin</label>
+      <div class="pass-wrap">
+        <input type="password" id="pass" placeholder="Masukkan password..." onkeydown="if(event.key==='Enter')doLogin()">
+        <button class="eye-btn" id="eye-btn" onclick="toggleEye()">👁️</button>
+      </div>
+    </div>
+
+    <button class="btn-login" onclick="doLogin()">🔓 Masuk sebagai Admin</button>
+    <a href="index.html" class="back-link">← Kembali ke Toko</a>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script>
+// Jika sudah login langsung ke admin
+if (isAdmin()) window.location.href = 'admin.html';
+
+function doLogin() {
+  const pass = document.getElementById('pass').value;
+  const err = document.getElementById('err-box');
+  const card = document.getElementById('login-card');
+  if (adminLogin(pass)) {
+    window.location.href = 'admin.html';
+  } else {
+    err.classList.add('show');
+    document.getElementById('pass').value = '';
+    document.getElementById('pass').focus();
+    card.classList.remove('shake');
+    void card.offsetWidth;
+    card.classList.add('shake');
+  }
+}
+
+function toggleEye() {
+  const inp = document.getElementById('pass');
+  const btn = document.getElementById('eye-btn');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  btn.textContent = inp.type === 'password' ? '👁️' : '🙈';
+}
+</script>
+</body>
+</html>

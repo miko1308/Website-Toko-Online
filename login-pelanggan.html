@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Pelanggan — Fhoenix12 Aquarius</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+.auth-wrap { width: 100%; max-width: 400px; }
+.auth-card {
+  background: rgba(16,16,30,0.92); border: 1.5px solid var(--border2);
+  border-radius: 22px; padding: 2.25rem 2rem;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(159,122,234,0.08);
+  backdrop-filter: blur(20px); position: relative; overflow: hidden;
+}
+.auth-card::before {
+  content:''; position:absolute; top:-80px; left:-80px; width:220px; height:220px;
+  background:radial-gradient(circle, rgba(100,60,200,0.15) 0%, transparent 70%);
+  pointer-events:none;
+}
+.auth-card::after {
+  content:''; position:absolute; bottom:-60px; right:-60px; width:180px; height:180px;
+  background:radial-gradient(circle, rgba(246,166,35,0.1) 0%, transparent 70%);
+  pointer-events:none;
+}
+.auth-logo { text-align:center; margin-bottom:1.75rem; }
+.auth-logo-img { font-size:2.5rem; margin-bottom:0.5rem; display:block; animation:float 4s ease-in-out infinite; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+.auth-logo-name { font-family:'Cinzel',serif; font-size:1.25rem; font-weight:700; color:var(--ink); }
+.auth-logo-name span { background:linear-gradient(135deg,#9f7aea,#f6a623); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.auth-badge {
+  display:inline-block; margin-top:0.4rem;
+  background:rgba(159,122,234,0.1); border:1px solid rgba(159,122,234,0.25);
+  border-radius:100px; padding:0.2rem 0.8rem;
+  font-size:0.65rem; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent);
+}
+.auth-title { font-family:'Cinzel',serif; font-size:1.1rem; margin-bottom:0.2rem; color:var(--ink); }
+.auth-sub { font-size:0.8rem; color:var(--ink2); margin-bottom:1.5rem; }
+.err-box {
+  display:none; background:rgba(248,113,113,0.1); border:1px solid rgba(248,113,113,0.25);
+  border-radius:9px; padding:0.65rem 0.9rem; font-size:0.8rem; color:var(--danger); margin-bottom:1rem;
+}
+.err-box.show { display:flex; align-items:center; gap:0.4rem; animation:fadeIn 0.15s; }
+.pass-wrap { position:relative; }
+.pass-wrap input { padding-right:3rem; }
+.eye-btn { position:absolute; right:0.9rem; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; font-size:0.95rem; color:var(--ink2); transition:color 0.15s; }
+.eye-btn:hover { color:var(--accent); }
+.btn-main {
+  width:100%; padding:0.82rem; border-radius:11px; border:none; cursor:pointer;
+  background:linear-gradient(135deg,#6d28d9,#9f7aea); color:#fff;
+  font-size:0.92rem; font-weight:700; font-family:'DM Sans',sans-serif;
+  box-shadow:0 6px 24px rgba(109,40,217,0.4); transition:all 0.2s; margin-top:0.5rem;
+  display:flex; align-items:center; justify-content:center; gap:0.5rem;
+}
+.btn-main:hover { transform:translateY(-1px); box-shadow:0 8px 32px rgba(109,40,217,0.55); }
+.auth-footer { text-align:center; margin-top:1.3rem; font-size:0.8rem; color:var(--ink2); }
+.auth-footer a { color:var(--accent); text-decoration:none; font-weight:600; }
+.auth-footer a:hover { text-decoration:underline; }
+/* Tombol back hanya muncul jika bukan dari redirect wajib login */
+.back-home {
+  display:none; text-align:center; margin-top:1rem; font-size:0.78rem;
+  color:var(--ink2); text-decoration:none; transition:color 0.15s;
+}
+.back-home.visible { display:block; }
+.back-home:hover { color:var(--accent); }
+.tabs { display:flex; background:var(--surface2); border-radius:10px; padding:3px; margin-bottom:1.5rem; }
+.tab { flex:1; text-align:center; padding:0.5rem; border-radius:8px; cursor:pointer; font-size:0.82rem; font-weight:600; color:var(--ink2); transition:all 0.2s; border:none; background:none; font-family:'DM Sans',sans-serif; }
+.tab.active { background:var(--accent); color:#fff; box-shadow:0 2px 12px rgba(109,40,217,0.3); }
+</style>
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <span class="auth-logo-img">🦅</span>
+      <div class="auth-logo-name">Fhoenix<span>12</span> Aquarius</div>
+      <div class="auth-badge">Portal Pelanggan</div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('login',this)">🔑 Login</button>
+      <button class="tab" onclick="showTab('register',this)">📝 Daftar</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="tab-login">
+      <div class="auth-title">Selamat Datang</div>
+      <div class="auth-sub">Masuk ke akun pelangganmu.</div>
+      <div class="err-box" id="login-err">❌ <span id="login-err-msg">Error</span></div>
+      <div class="form-group"><label>Email</label><input type="email" id="l-email" placeholder="email@kamu.com"></div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="pass-wrap">
+          <input type="password" id="l-pass" placeholder="Password..." onkeydown="if(event.key==='Enter')doLogin()">
+          <button class="eye-btn" onclick="toggleEye('l-pass',this)">👁️</button>
+        </div>
+      </div>
+      <button class="btn-main" onclick="doLogin()">🔑 Masuk</button>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div id="tab-register" style="display:none">
+      <div class="auth-title">Buat Akun Baru</div>
+      <div class="auth-sub">Daftar untuk melacak pesananmu.</div>
+      <div class="err-box" id="reg-err">❌ <span id="reg-err-msg">Error</span></div>
+      <div class="form-group"><label>Nama Lengkap *</label><input type="text" id="r-name" placeholder="Nama kamu..."></div>
+      <div class="form-group"><label>Email *</label><input type="email" id="r-email" placeholder="email@kamu.com"></div>
+      <div class="form-group"><label>Nomor WhatsApp *</label><input type="tel" id="r-phone" placeholder="08xxxxxxxxxx"></div>
+      <div class="form-group">
+        <label>Password *</label>
+        <div class="pass-wrap">
+          <input type="password" id="r-pass" placeholder="Min. 6 karakter...">
+          <button class="eye-btn" onclick="toggleEye('r-pass',this)">👁️</button>
+        </div>
+      </div>
+      <div class="form-group"><label>Kode Referral (jika ada)</label><input type="text" id="r-ref" placeholder="Kode dari teman/owner..."></div>
+      <button class="btn-main" onclick="doRegister()">📝 Buat Akun</button>
+    </div>
+
+    <!-- Tombol kembali: hanya tampil jika user datang bukan dari redirect wajib login -->
+    <a href="index.html" class="back-home" id="back-btn">← Kembali ke Toko</a>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script>
+// Jika sudah login, redirect langsung
+if (isLoggedIn()) {
+  const after = sessionStorage.getItem('after_login') || 'index.html';
+  sessionStorage.removeItem('after_login');
+  window.location.href = after;
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(location.search);
+
+  // Buka tab register otomatis jika ada ?tab=register di URL
+  if (params.get('tab') === 'register') {
+    showTab('register', document.querySelectorAll('.tab')[1]);
+  }
+
+  // Tampilkan tombol "Kembali ke Toko" HANYA jika:
+  // - bukan redirect dari after_login (artinya user sengaja buka halaman ini sendiri)
+  // - atau ada param ?from= yang bukan index.html
+  const afterLogin = sessionStorage.getItem('after_login');
+  const fromParam  = params.get('from');
+  // Jika ada after_login ke index.html → user dipaksa login, sembunyikan tombol back
+  // Jika tidak ada after_login / after_login bukan index → tampilkan tombol back
+  const dipaksaLogin = (afterLogin === 'index.html');
+  if (!dipaksaLogin) {
+    document.getElementById('back-btn').classList.add('visible');
+  }
+});
+
+function showTab(tab, btn) {
+  document.getElementById('tab-login').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('tab-register').style.display = tab === 'register' ? 'block' : 'none';
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function toggleEye(id, btn) {
+  const inp = document.getElementById(id);
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  btn.textContent = inp.type === 'password' ? '👁️' : '🙈';
+}
+
+function showErr(id, msgId, msg) {
+  const el = document.getElementById(id);
+  document.getElementById(msgId).textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 4000);
+}
+
+function doLogin() {
+  const email = document.getElementById('l-email').value.trim();
+  const pass  = document.getElementById('l-pass').value;
+  if (!email || !pass) { showErr('login-err','login-err-msg','Isi email dan password.'); return; }
+  const res = loginUser(email, pass);
+  if (res.ok) {
+    const after = sessionStorage.getItem('after_login');
+    sessionStorage.removeItem('after_login');
+    const params = new URLSearchParams(location.search);
+    window.location.href = after || params.get('from') || 'index.html';
+  } else showErr('login-err', 'login-err-msg', res.msg);
+}
+
+function doRegister() {
+  const name  = document.getElementById('r-name').value.trim();
+  const email = document.getElementById('r-email').value.trim();
+  const phone = document.getElementById('r-phone').value.trim();
+  const pass  = document.getElementById('r-pass').value;
+  const ref   = document.getElementById('r-ref').value.trim();
+  if (!name || !email || !phone || !pass) { showErr('reg-err','reg-err-msg','Lengkapi semua field wajib.'); return; }
+  if (pass.length < 6) { showErr('reg-err','reg-err-msg','Password minimal 6 karakter.'); return; }
+  const res = registerUser(name, email, phone, pass, ref);
+  if (res.ok) {
+    const after = sessionStorage.getItem('after_login');
+    sessionStorage.removeItem('after_login');
+    window.location.href = after || 'index.html';
+  } else showErr('reg-err', 'reg-err-msg', res.msg);
+}
+</script>
+</body>
+</html>

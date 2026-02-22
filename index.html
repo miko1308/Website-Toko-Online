@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fhoenix12 Aquarius — Toko Digital & Fisik</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.hero {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2rem; align-items: center;
+  padding: 2.5rem 0 3.5rem;
+  min-height: 380px;
+}
+.hero-left { order: 1; }
+.hero-right {
+  order: 2; display: flex; justify-content: center; align-items: center;
+  position: relative;
+}
+.phoenix-img {
+  width: 100%; max-width: 300px;
+  border-radius: 20px; object-fit: cover;
+  filter: drop-shadow(0 0 40px rgba(159,122,234,0.5)) drop-shadow(0 0 80px rgba(246,166,35,0.25));
+  animation: float 5s ease-in-out infinite;
+}
+@keyframes float { 0%,100%{transform:translateY(0) rotate(-1deg)} 50%{transform:translateY(-12px) rotate(1deg)} }
+.phoenix-glow {
+  position: absolute; inset: -20px;
+  background: radial-gradient(ellipse, rgba(159,122,234,0.15) 0%, rgba(246,166,35,0.08) 50%, transparent 70%);
+  border-radius: 50%; pointer-events: none; z-index: -1;
+  animation: glow-pulse 4s ease-in-out infinite;
+}
+@keyframes glow-pulse { 0%,100%{opacity:0.7; transform:scale(0.95)} 50%{opacity:1; transform:scale(1.05)} }
+
+.hero-eyebrow {
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  background: linear-gradient(90deg, #9f7aea, #f6a623);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: 0.7rem; display: block;
+}
+.hero h1 {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.8rem, 4.5vw, 3rem);
+  line-height: 1.2; font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(140deg, #f0edff 0%, #c4b5fd 45%, #f6a623 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hero p { color: var(--ink2); max-width: 420px; font-size: 0.92rem; line-height: 1.75; margin-bottom: 1.8rem; }
+.hero-cta { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+.stats {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden; margin: 2.5rem 0;
+}
+.stat { background: var(--surface); padding: 1.2rem 1rem; text-align: center; }
+.stat-val {
+  font-family: 'Cinzel', serif; font-size: 1.6rem; line-height: 1; margin-bottom: 0.3rem;
+  background: linear-gradient(135deg, #c4b5fd, #f6a623);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.stat-label { font-size: 0.72rem; color: var(--ink2); font-weight: 500; }
+
+.quick-nav { display: grid; grid-template-columns: repeat(2,1fr); gap: 1rem; }
+.qcard {
+  background: rgba(16,16,30,0.8); border: 1.5px solid var(--border);
+  border-radius: var(--radius); padding: 1.5rem 1.2rem;
+  text-decoration: none; color: var(--ink); transition: all 0.2s;
+  display: block; backdrop-filter: blur(8px);
+  position: relative; overflow: hidden;
+}
+.qcard::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(159,122,234,0.04) 0%, transparent 60%);
+  opacity: 0; transition: opacity 0.2s;
+}
+.qcard:hover { border-color: rgba(159,122,234,0.35); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+.qcard:hover::before { opacity: 1; }
+.qcard-icon { font-size: 1.8rem; margin-bottom: 0.65rem; }
+.qcard-title { font-family: 'Cinzel', serif; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.3rem; color: var(--ink); }
+.qcard-desc { font-size: 0.78rem; color: var(--ink2); line-height: 1.55; }
+.qcard-arrow { display: inline-flex; align-items: center; gap: 0.3rem; color: var(--accent); font-size: 0.75rem; font-weight: 600; margin-top: 0.8rem; }
+
+.section-label {
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--ink2); margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+.product-preview { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 1.2rem; }
+.mini-card {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: 12px; padding: 0.9rem;
+  display: flex; align-items: center; gap: 0.75rem;
+  transition: all 0.2s;
+}
+.mini-card:hover { border-color: rgba(159,122,234,0.3); }
+.mini-icon { font-size: 1.5rem; flex-shrink: 0; }
+.mini-name { font-size: 0.82rem; font-weight: 600; margin-bottom: 0.12rem; color: var(--ink); }
+.mini-price {
+  font-size: 0.8rem; font-weight: 700;
+  background: linear-gradient(135deg, #9f7aea, #f6a623);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.mini-badge {
+  font-size: 0.65rem; font-weight: 700; padding: 0.12rem 0.45rem; border-radius: 5px;
+  background: rgba(159,122,234,0.12); color: var(--accent); margin-left: auto;
+  align-self: flex-start; white-space: nowrap; border: 1px solid rgba(159,122,234,0.2);
+}
+
+.user-bar {
+  background: linear-gradient(135deg, rgba(30,22,53,0.9), rgba(40,28,70,0.9));
+  border: 1.5px solid rgba(159,122,234,0.2); border-radius: var(--radius);
+  padding: 1.25rem 1.5rem; margin-top: 2rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+}
+.user-bar-text { font-size: 0.85rem; color: var(--ink2); }
+.user-bar-text strong { color: var(--ink); }
+.user-bar-btns { display: flex; gap: 0.6rem; }
+
+@media(max-width:640px) {
+  .hero { grid-template-columns: 1fr; text-align: center; }
+  .hero-right { order: 1; }
+  .hero-left { order: 2; }
+  .hero p { max-width: 100%; }
+  .hero-cta { justify-content: center; }
+  .stats { grid-template-columns: repeat(2,1fr); }
+  .quick-nav { grid-template-columns: 1fr; }
+  .product-preview { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">Fhoenix<span>12</span> Aquarius</a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Beranda</a></li>
+    <li><a href="produk.html">Produk</a></li>
+    <li><a href="cara-pesan.html">Cara Pesan</a></li>
+    <li id="nav-akun-li" style="display:none"><a href="akun.html">👤 Akun</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="store-pill" id="store-pill"><div class="dot"></div> Buka</div>
+    <a href="https://wa.me/6287872334563" class="btn-wa" target="_blank">💬 WA</a>
+    <a href="login-pelanggan.html" class="btn btn-ghost btn-sm" id="nav-auth-btn" style="display:none">🔑 Login</a>
+    <button onclick="logoutUser()" class="btn btn-ghost btn-sm" id="nav-logout-btn" style="display:none">Logout</button>
+  </div>
+</nav>
+<div id="closed-banner">🔒 Toko tutup sementara — Hubungi WhatsApp untuk pesanan</div>
+
+<div class="page-wrap">
+  <div class="hero fade-up">
+    <div class="hero-left">
+      <span class="hero-eyebrow">✦ Toko Digital & Fisik Terpercaya</span>
+      <h1>Top Up &amp; Belanja<br>Mudah &amp; Aman</h1>
+      <p>Google Play Card, Voucher Platform, Visa, dan Produk Fisik pilihan — semua ada di Fhoenix12 Aquarius.</p>
+      <div class="hero-cta">
+        <a href="produk.html" class="btn btn-accent">🛒 Lihat Produk</a>
+        <a href="cara-pesan.html" class="btn btn-ghost">📋 Cara Pesan</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="phoenix-glow"></div>
+      <img src="phoenix.jpg" alt="Fhoenix12 Aquarius" class="phoenix-img">
+    </div>
+  </div>
+
+  <div class="stats fade-up" style="animation-delay:0.1s">
+    <div class="stat"><div class="stat-val">500+</div><div class="stat-label">Transaksi</div></div>
+    <div class="stat"><div class="stat-val">4.9★</div><div class="stat-label">Rating</div></div>
+    <div class="stat"><div class="stat-val">&lt;5m</div><div class="stat-label">Proses</div></div>
+    <div class="stat"><div class="stat-val">24/7</div><div class="stat-label">Support WA</div></div>
+  </div>
+
+  <div class="section-label">Menu Utama</div>
+  <div class="quick-nav fade-up" style="animation-delay:0.15s">
+    <a href="produk.html" class="qcard">
+      <div class="qcard-icon">🛍️</div>
+      <div class="qcard-title">Produk</div>
+      <div class="qcard-desc">Google Play Card, Voucher, Visa Platform, dan Produk Fisik pilihan</div>
+      <div class="qcard-arrow">Lihat semua →</div>
+    </a>
+    <a href="cara-pesan.html" class="qcard">
+      <div class="qcard-icon">📋</div>
+      <div class="qcard-title">Cara Pesan</div>
+      <div class="qcard-desc">Panduan lengkap cara memesan dan membayar dengan mudah</div>
+      <div class="qcard-arrow">Lihat panduan →</div>
+    </a>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-label" style="margin-top:2rem">Produk Populer</div>
+  <div class="product-preview fade-up" style="animation-delay:0.2s">
+    <div class="mini-card"><div class="mini-icon">🎮</div><div><div class="mini-name">Google Play Card 39rb</div><div class="mini-price">Rp39.000</div></div><div class="mini-badge">Digital</div></div>
+    <div class="mini-card"><div class="mini-icon">🎮</div><div><div class="mini-name">Google Play Card 75rb</div><div class="mini-price">Rp75.000</div></div><div class="mini-badge">Digital</div></div>
+    <div class="mini-card"><div class="mini-icon">💳</div><div><div class="mini-name">Visa Platform Pass</div><div class="mini-price">Rp85.000</div></div><div class="mini-badge">Digital</div></div>
+    <div class="mini-card"><div class="mini-icon">📦</div><div><div class="mini-name">Produk Fisik Premium</div><div class="mini-price">Rp120.000</div></div><div class="mini-badge">Fisik</div></div>
+  </div>
+  <a href="produk.html" class="btn btn-ghost btn-full">Lihat Semua Produk →</a>
+
+  <!-- Bar untuk user yang sudah login -->
+  <div class="user-bar fade-up" id="user-welcome-bar" style="animation-delay:0.25s;display:none">
+    <div class="user-bar-text">
+      👋 Halo, <strong id="user-welcome-name">—</strong>! Selamat datang kembali.
+    </div>
+    <div class="user-bar-btns">
+      <a href="akun.html" class="btn btn-accent btn-sm">👤 Akun Saya</a>
+      <button onclick="logoutUser()" class="btn btn-ghost btn-sm">Logout</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <strong>Fhoenix12 Aquarius</strong> · Toko Digital & Fisik Terpercaya<br>
+  <span style="font-size:0.72rem;margin-top:0.35rem;display:block;opacity:0.6">© 2025 Fhoenix12 Aquarius · All rights reserved</span>
+  <a href="login.html" style="font-size:0.68rem;color:var(--ink2);text-decoration:none;opacity:0.3;display:inline-block;margin-top:0.5rem;transition:opacity 0.2s" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='0.3'">⚙️ Admin</a>
+</footer>
+
+<script src="auth.js"></script>
+<script src="shared.js"></script>
+<script>
+// ── WAJIB LOGIN sebelum masuk beranda (kecuali admin) ──
+(function() {
+  if (!isAdmin() && !isLoggedIn()) {
+    // Simpan tujuan agar setelah login balik ke sini
+    sessionStorage.setItem('after_login', 'index.html');
+    window.location.href = 'login-pelanggan.html';
+  }
+})();
+
+window.addEventListener('DOMContentLoaded', () => {
+  const user = getCurrentUser();
+
+  // Tampilkan nav akun jika login
+  if (user) {
+    const akunLi = document.getElementById('nav-akun-li');
+    if (akunLi) akunLi.style.display = 'block';
+
+    const logoutBtn = document.getElementById('nav-logout-btn');
+    if (logoutBtn) logoutBtn.style.display = 'inline-flex';
+
+    // Tampilkan welcome bar
+    const bar = document.getElementById('user-welcome-bar');
+    const nameEl = document.getElementById('user-welcome-name');
+    if (bar && nameEl) {
+      nameEl.textContent = user.name;
+      bar.style.display = 'flex';
+    }
+  }
+});
+</script>
+</body>
+</html>
